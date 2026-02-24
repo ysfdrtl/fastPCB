@@ -1,4 +1,5 @@
 # Ali Tutar'ın REST API Metotları
+# DOKUNMADIM
 
 ## 1. Üye Olma
 - **Endpoint:** `POST /auth/register`

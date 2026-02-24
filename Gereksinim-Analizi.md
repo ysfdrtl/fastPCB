@@ -29,9 +29,6 @@ Tüm gereksinimlerinizi çıkardıktan sonra beraber tartışıyoruz ve son gere
 2. **Üye Olma** (Yusuf Doruatlı)
    - **API Metodu:** `POST /auth/register`
    - **Açıklama:** Kullanıcıların yeni hesaplar oluşturarak sisteme kayıt olmasını sağlar. Kişisel bilgilerin toplanmasını ve hesap oluşturma işlemlerini içerir. Kullanıcılar email adresi ve şifre belirleyerek hesap oluşturur.
-3. **Şifre Sıfırlama** (Yusuf Doruatlı)
-   - **API Metodu:** `POST /auth/paswordReset`
-   - **Açıklama:** kullanıcı e postasına gelicek bir mail ile şifre sıfırlama işlemi yapabilir.
 4. **Profil bilgileri Güncelleme** (Yusuf Doruatlı)
    - **API Metodu:** `PUT /auth/Update`
    - **Açıklama:** kullanıcı ad, soyad, adres vb. bilgileri güncelleyebilcek.
@@ -76,6 +73,10 @@ Tüm gereksinimlerinizi çıkardıktan sonra beraber tartışıyoruz ve son gere
 16. **destek talebi cevaplama** (Yusuf Doruatlı)
    - **API metodu:** `POST /ticket/response`
    - **Açıklama:** Admin panelinden ticket'a cevap verme işlemi.
+
+17. **Sipariş Silme** (Yusuf Doruatlı)
+   - **API metodu:** `DELETE /order/delete/{orderID}`
+   - **Açıklama:** sipariş uretim aşamasına geçmediyse sipariş silinir.
 
 
 

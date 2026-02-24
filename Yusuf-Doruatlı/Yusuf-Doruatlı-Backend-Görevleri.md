@@ -1,6 +1,7 @@
-# Ali Tutar'ın Mobil Backend Görevleri
+# Yusuf Doruatlı'nın Mobil Backend Görevleri
+# DOKUNMADIM
 
-## 1. Üye Olma (Kayıt) Servisi
+## 1. giriş yapma
 - **API Endpoint:** `POST /auth/register`
 - **Görev:** Mobil uygulamada kullanıcı kayıt işlemini gerçekleştiren servis entegrasyonu
 - **İşlevler:**
@@ -13,7 +14,7 @@
   - HTTP Client kullanımı (Retrofit/OkHttp - Android, URLSession/Alamofire - iOS)
   - Request/Response model sınıfları oluşturma
   - Error handling ve retry mekanizması
-  - Loading state yönetimi
+  - Loading state yönetimiasdas
 
 ## 2. Kullanıcı Bilgilerini Görüntüleme Servisi
 - **API Endpoint:** `GET /users/{userId}`
