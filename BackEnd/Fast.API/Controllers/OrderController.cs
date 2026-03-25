@@ -59,21 +59,22 @@ namespace Fast.API.Controllers
         /// POST /api/order/upload - Upload gerber file
         /// </summary>
         [HttpPost("upload")]
-        public async Task<IActionResult> UploadFile([FromForm] IFormFile file, [FromQuery] int orderId)
+        public async Task<IActionResult> UploadFile([FromBody] UploadFileRequest request)
         {
-            if (file == null || file.Length == 0)
-                return BadRequest("File is required");
+            if (string.IsNullOrWhiteSpace(request.FileName) || string.IsNullOrWhiteSpace(request.FileBase64))
+                return BadRequest("FileName and FileBase64 are required");
 
+            var byteArray = Convert.FromBase64String(request.FileBase64);
             var uploadFileDto = new UploadFileDto
             {
-                OrderId = orderId,
-                FileName = file.FileName,
-                FileUrl = $"/uploads/{orderId}/{file.FileName}",
-                FileType = Path.GetExtension(file.FileName),
-                FileSize = file.Length
+                OrderId = request.OrderId,
+                FileName = request.FileName,
+                FileUrl = $"/uploads/{request.OrderId}/{request.FileName}",
+                FileType = Path.GetExtension(request.FileName),
+                FileSize = byteArray.Length
             };
 
-            var result = await _orderService.UploadFileAsync(orderId, uploadFileDto);
+            var result = await _orderService.UploadFileAsync(request.OrderId, uploadFileDto);
             return StatusCode((int)result.StatusCode, result);
         }
 
@@ -116,5 +117,12 @@ namespace Fast.API.Controllers
             var result = await _orderService.UpdateOrderStatusAsync(updateStatusDto);
             return StatusCode((int)result.StatusCode, result);
         }
+    }
+
+    public class UploadFileRequest
+    {
+        public int OrderId { get; set; }
+        public string? FileName { get; set; }
+        public string? FileBase64 { get; set; }
     }
 }
