@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "Pu2CMOEOMfw=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\yusuf\\projeler\\fastPCB\\fastPCB\\BackEnd\\Fast.Core\\Fast.Core.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\yusuf\\.nuget\\packages\\microsoft.netcore.app.ref\\8.0.25\\microsoft.netcore.app.ref.8.0.25.nupkg.sha512",
+    "C:\\Users\\yusuf\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\8.0.25\\microsoft.windowsdesktop.app.ref.8.0.25.nupkg.sha512",
+    "C:\\Users\\yusuf\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\8.0.25\\microsoft.aspnetcore.app.ref.8.0.25.nupkg.sha512"
+  ],
+  "logs": []
+}

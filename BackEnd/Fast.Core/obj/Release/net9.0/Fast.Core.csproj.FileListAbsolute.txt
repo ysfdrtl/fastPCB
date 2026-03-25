@@ -1,0 +1,11 @@
+C:\Users\yusuf\projeler\fastPCB\BackEnd\Fast.Core\bin\Release\net9.0\Fast.Core.deps.json
+C:\Users\yusuf\projeler\fastPCB\BackEnd\Fast.Core\bin\Release\net9.0\Fast.Core.dll
+C:\Users\yusuf\projeler\fastPCB\BackEnd\Fast.Core\bin\Release\net9.0\Fast.Core.pdb
+C:\Users\yusuf\projeler\fastPCB\BackEnd\Fast.Core\obj\Release\net9.0\Fast.Core.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\yusuf\projeler\fastPCB\BackEnd\Fast.Core\obj\Release\net9.0\Fast.Core.AssemblyInfoInputs.cache
+C:\Users\yusuf\projeler\fastPCB\BackEnd\Fast.Core\obj\Release\net9.0\Fast.Core.AssemblyInfo.cs
+C:\Users\yusuf\projeler\fastPCB\BackEnd\Fast.Core\obj\Release\net9.0\Fast.Core.csproj.CoreCompileInputs.cache
+C:\Users\yusuf\projeler\fastPCB\BackEnd\Fast.Core\obj\Release\net9.0\Fast.Core.dll
+C:\Users\yusuf\projeler\fastPCB\BackEnd\Fast.Core\obj\Release\net9.0\refint\Fast.Core.dll
+C:\Users\yusuf\projeler\fastPCB\BackEnd\Fast.Core\obj\Release\net9.0\Fast.Core.pdb
+C:\Users\yusuf\projeler\fastPCB\BackEnd\Fast.Core\obj\Release\net9.0\ref\Fast.Core.dll

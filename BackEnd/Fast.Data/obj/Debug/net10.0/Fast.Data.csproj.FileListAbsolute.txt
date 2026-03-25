@@ -1,0 +1,17 @@
+C:\Users\yusuf\projeler\fastPCB\BackEnd\Fast.Data\bin\Debug\net10.0\Fast.Data.deps.json
+C:\Users\yusuf\projeler\fastPCB\BackEnd\Fast.Data\bin\Debug\net10.0\Fast.Data.runtimeconfig.json
+C:\Users\yusuf\projeler\fastPCB\BackEnd\Fast.Data\bin\Debug\net10.0\Fast.Data.dll
+C:\Users\yusuf\projeler\fastPCB\BackEnd\Fast.Data\bin\Debug\net10.0\Fast.Data.pdb
+C:\Users\yusuf\projeler\fastPCB\BackEnd\Fast.Data\bin\Debug\net10.0\Fast.Core.dll
+C:\Users\yusuf\projeler\fastPCB\BackEnd\Fast.Data\bin\Debug\net10.0\Fast.Core.pdb
+C:\Users\yusuf\projeler\fastPCB\BackEnd\Fast.Data\obj\Debug\net10.0\Fast.Data.csproj.AssemblyReference.cache
+C:\Users\yusuf\projeler\fastPCB\BackEnd\Fast.Data\obj\Debug\net10.0\Fast.Data.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\yusuf\projeler\fastPCB\BackEnd\Fast.Data\obj\Debug\net10.0\Fast.Data.AssemblyInfoInputs.cache
+C:\Users\yusuf\projeler\fastPCB\BackEnd\Fast.Data\obj\Debug\net10.0\Fast.Data.AssemblyInfo.cs
+C:\Users\yusuf\projeler\fastPCB\BackEnd\Fast.Data\obj\Debug\net10.0\Fast.Data.csproj.CoreCompileInputs.cache
+C:\Users\yusuf\projeler\fastPCB\BackEnd\Fast.Data\obj\Debug\net10.0\Fast.Data.csproj.Up2Date
+C:\Users\yusuf\projeler\fastPCB\BackEnd\Fast.Data\obj\Debug\net10.0\Fast.Data.dll
+C:\Users\yusuf\projeler\fastPCB\BackEnd\Fast.Data\obj\Debug\net10.0\refint\Fast.Data.dll
+C:\Users\yusuf\projeler\fastPCB\BackEnd\Fast.Data\obj\Debug\net10.0\Fast.Data.pdb
+C:\Users\yusuf\projeler\fastPCB\BackEnd\Fast.Data\obj\Debug\net10.0\Fast.Data.genruntimeconfig.cache
+C:\Users\yusuf\projeler\fastPCB\BackEnd\Fast.Data\obj\Debug\net10.0\ref\Fast.Data.dll

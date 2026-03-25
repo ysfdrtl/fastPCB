@@ -1,0 +1,17 @@
+C:\Users\yusuf\projeler\fastPCB\BackEnd\Fast.Business\bin\Release\net9.0\Fast.Business.deps.json
+C:\Users\yusuf\projeler\fastPCB\BackEnd\Fast.Business\bin\Release\net9.0\Fast.Business.dll
+C:\Users\yusuf\projeler\fastPCB\BackEnd\Fast.Business\bin\Release\net9.0\Fast.Business.pdb
+C:\Users\yusuf\projeler\fastPCB\BackEnd\Fast.Business\bin\Release\net9.0\Fast.Core.dll
+C:\Users\yusuf\projeler\fastPCB\BackEnd\Fast.Business\bin\Release\net9.0\Fast.Data.dll
+C:\Users\yusuf\projeler\fastPCB\BackEnd\Fast.Business\bin\Release\net9.0\Fast.Core.pdb
+C:\Users\yusuf\projeler\fastPCB\BackEnd\Fast.Business\bin\Release\net9.0\Fast.Data.pdb
+C:\Users\yusuf\projeler\fastPCB\BackEnd\Fast.Business\obj\Release\net9.0\Fast.Business.csproj.AssemblyReference.cache
+C:\Users\yusuf\projeler\fastPCB\BackEnd\Fast.Business\obj\Release\net9.0\Fast.Business.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\yusuf\projeler\fastPCB\BackEnd\Fast.Business\obj\Release\net9.0\Fast.Business.AssemblyInfoInputs.cache
+C:\Users\yusuf\projeler\fastPCB\BackEnd\Fast.Business\obj\Release\net9.0\Fast.Business.AssemblyInfo.cs
+C:\Users\yusuf\projeler\fastPCB\BackEnd\Fast.Business\obj\Release\net9.0\Fast.Business.csproj.CoreCompileInputs.cache
+C:\Users\yusuf\projeler\fastPCB\BackEnd\Fast.Business\obj\Release\net9.0\Fast.Bus.91278079.Up2Date
+C:\Users\yusuf\projeler\fastPCB\BackEnd\Fast.Business\obj\Release\net9.0\Fast.Business.dll
+C:\Users\yusuf\projeler\fastPCB\BackEnd\Fast.Business\obj\Release\net9.0\refint\Fast.Business.dll
+C:\Users\yusuf\projeler\fastPCB\BackEnd\Fast.Business\obj\Release\net9.0\Fast.Business.pdb
+C:\Users\yusuf\projeler\fastPCB\BackEnd\Fast.Business\obj\Release\net9.0\ref\Fast.Business.dll
