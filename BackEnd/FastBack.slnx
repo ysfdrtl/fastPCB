@@ -1,6 +1,0 @@
-<Solution>
-  <Project Path="Fast.API/Fast.API.csproj" />
-  <Project Path="Fast.Business/Fast.Business.csproj" />
-  <Project Path="Fast.Core/Fast.Core.csproj" />
-  <Project Path="Fast.Data/Fast.Data.csproj" />
-</Solution>
