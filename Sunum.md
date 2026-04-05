@@ -2,142 +2,88 @@
 
 ## Sunum Videosu
 
-> **Video Linki:** [Sunum videosu linki buraya eklenecek](https://example.com)
+> **Video Linki:** Sunum videosu hazirlandiginda buraya eklenecektir.
 
 ---
 
-## Sunum Yapısı
+## Sunum Yapisi
 
-### 1. Grup Lideri - Açılış Konuşması (1-2 dakika)
+### 1. Acilis Konusmasi (1-2 dakika)
 
-**Konuşma İçeriği:**
-- Grup adının tanıtılması
-- Projenin genel tanıtımı
-- Projenin amacı ve kapsamı
-- Sunumun yapısının kısaca açıklanması
+**Konusma Icerigi:**
+- Proje adinin tanitilmasi
+- Projenin ne yaptiginin kisaca anlatilmasi
+- Kullanilan teknolojilerin soylenmesi
+- Sunum akisina kisa giris yapilmasi
 
-**Örnek Konuşma:**
-> "Merhaba, ben [Grup Lideri İsmi]. [Grup Adı] ekibi olarak [Proje Adı] projesini geliştirdik. Bu proje [kısa proje açıklaması]. Bugün sizlere projemizi ve ekibimizin çalışmalarını sunacağız. Her ekip üyesi kendini tanıtacak ve sorumlu olduğu gereksinimleri gösterecek."
-
----
-
-### 2. Ekip Üyeleri - Kişisel Tanıtım ve Gereksinim Sunumu
-
-Her ekip üyesi için aşağıdaki yapı takip edilecektir:
-
-#### Format (Her üye için 4-6 dakika)
-
-**A) Kişisel Tanıtım (30-45 saniye)**
-- Yüz görünecek şekilde kamera karşısında
-- İsim ve soyisim
-- Ekipteki rolü
-- Sorumlu olduğu alan (Backend/Frontend/Mobil vb.)
-
-**B) Gereksinim Sunumu (3.5-5 dakika)**
-- Sorumlu olduğu gereksinimlerin listesi
-- Her gereksinimin kısa açıklaması
-- Canlı demo (ekran kaydı ile)
-- Her gereksinimin çalışır durumda olduğunun detaylı gösterilmesi
-- Her gereksinim için yeterli süre ayrılmalı (yaklaşık 1-1.5 dakika/gereksinim)
+**Ornek Konusma:**
+> "Merhaba, ben Yusuf Doruatli. FastPCB adli projemi gelistirdim. Bu proje, kullanicilarin PCB tasarimlarini yukleyip paylastigi bir topluluk platformudur. Sunumda sizlere backend yapisini, frontend ekranlarini ve temel gereksinimlerin nasil calistigini gosterecegim."
 
 ---
 
-### 3. Ekip Üyeleri Sunum Sırası
+### 2. Gereksinim Sunumu
 
-#### Ali Tutar
-**Kişisel Tanıtım:**
-- İsim: Ali Tutar
+#### Yusuf Doruatli
+
+**Kisisel Tanitim:**
+- Isim: Yusuf Doruatli
+- Rol: Full-stack gelistirici
 
 **Gereksinimler:**
-1. **Üye Olma**
-   - API Metodu: `POST /auth/register`
-   - Demo: Kullanıcı kayıt işleminin gösterilmesi
-
-2. **Profil Görüntüleme**
-   - API Metodu: `GET /users/{userId}`
-   - Demo: Kullanıcı profil bilgilerinin görüntülenmesi
-
-3. **Profil Güncelleme**
-   - API Metodu: `PUT /users/{userId}`
-   - Demo: Profil bilgilerinin güncellenmesi
-
-4. **Hesap Silme**
-   - API Metodu: `DELETE /users/{userId}`
-   - Demo: Hesap silme işleminin gösterilmesi
-
----
-
-#### Veli Yılmaz
-**Kişisel Tanıtım:**
-- İsim: Veli Yılmaz
-- Rol: [Rol belirtilecek]
-
-**Gereksinimler:**
-- [Gereksinim 1]
-- [Gereksinim 2]
-- [Gereksinim 3]
-- [Gereksinim 4]
+1. **Uye Olma**
+   - API Metodu: `POST /api/Auth/register`
+   - Demo: Yeni kullanici kaydi olusturma
+2. **Giris Yapma**
+   - API Metodu: `POST /api/Auth/login`
+   - Demo: JWT ile sisteme giris yapma
+3. **Proje Olusturma**
+   - API Metodu: `POST /api/projects`
+   - Demo: Yeni PCB projesi baslatma
+4. **Dosya Yukleme**
+   - API Metodu: `POST /api/projects/{projectId}/files`
+   - Demo: Projeye PCB dosyasi ekleme
+5. **Yorum ve Begeni**
+   - API Metotlari: `POST /api/projects/{projectId}/comments`, `POST /api/projects/{projectId}/like`
+   - Demo: Projeyle etkilesime girme
+6. **Raporlama**
+   - API Metodu: `POST /api/projects/{projectId}/report`
+   - Demo: Uygunsuz icerigi raporlama
 
 ---
 
-### 4. Grup Lideri - Kapanış Konuşması (1 dakika)
+### 3. Kapanis Konusmasi (1 dakika)
 
-**Konuşma İçeriği:**
-- Tüm gereksinimlerin tamamlandığının özeti
-- Projenin başarıyla tamamlandığının vurgulanması
+**Konusma Icerigi:**
+- Tum temel gereksinimlerin tamamlandigini ozetleme
+- Projenin amacina ulastigini vurgulama
 
-**Örnek Konuşma:**
-> "Bugün sizlere [Proje Adı] projemizi sunduk. Tüm ekip üyelerimiz sorumlu oldukları gereksinimleri başarıyla tamamladılar ve çalışır durumda gösterdiler. Projemiz [kısa özet]. Teşekkürler!"
-
----
-
-## Sunum Hazırlık Kontrol Listesi
-
-### Genel Hazırlık
-- [ ] Grup lideri açılış konuşmasını hazırladı
-- [ ] Her ekip üyesi kendi sunumunu hazırladı
-- [ ] Tüm gereksinimler çalışır durumda
-- [ ] Demo senaryoları hazırlandı
-- [ ] Test verileri ve hesaplar hazırlandı
-
-### Teknik Hazırlık
-- [ ] Video kayıt cihazı/kamera hazır
-- [ ] Mikrofon kalitesi test edildi
-- [ ] Işıklandırma uygun
-- [ ] Arka plan düzenlendi
-- [ ] Ekran kayıt yazılımı hazır (demo için)
-
-### Kişisel Hazırlık
-- [ ] Her ekip üyesi kendi bölümünü prova etti
-- [ ] Konuşma süreleri kontrol edildi
-- [ ] Gereksinimler ezberlendi veya notlar hazırlandı
-- [ ] Demo akışı prova edildi
+**Ornek Konusma:**
+> "FastPCB projesinde kullanici yonetimi, proje paylasimi, dosya yukleme, yorum, begeni ve raporlama akislarini calisir hale getirdim. Proje, PCB toplulugu icin temel bir paylasim platformu sunmaktadir. Tesekkur ederim."
 
 ---
 
-## Video Çekim Teknikleri
+## Sunum Hazirlik Kontrol Listesi
 
-### Kişisel Tanıtım Bölümü
-- **Kamera Açısı:** Yüz net görünecek şekilde
-- **Işık:** Yüzün iyi aydınlatıldığından emin olun
-- **Arka Plan:** Temiz ve profesyonel görünüm
-- **Görüntü:** Omuz üstü çekim
-- **Göz Teması:** Kameraya bakarak konuşun
+### Genel Hazirlik
+- [ ] Tanim metni hazir
+- [ ] Demo senaryolari hazir
+- [ ] Test kullanici hesabi hazir
+- [ ] Test proje verileri hazir
 
-### Demo Bölümü
-- **Ekran Kaydı:** Net ve yüksek çözünürlükte
-- **Ses:** Demo sırasında açıklama yapın
-- **Hız:** Yavaş ve anlaşılır hareket edin
-- **Vurgu:** Önemli noktaları işaret edin
+### Teknik Hazirlik
+- [ ] Kamera ve mikrofon kontrol edildi
+- [ ] Ekran kaydi hazir
+- [ ] Swagger ve frontend birlikte acik
+
+### Kisisel Hazirlik
+- [ ] Tum gereksinimler sirasiyla prova edildi
+- [ ] Sunum suresi kontrol edildi
 
 ---
 
-## Zaman Yönetimi
+## Zaman Yonetimi
 
-- **Grup Lideri Açılış:** 1-2 dakika
-- **Her Ekip Üyesi:** 4-6 dakika
-  - Kişisel tanıtım: 30-45 saniye
-  - Gereksinim sunumu: 3.5-5 dakika
-    - Her gereksinim için: yaklaşık 1-1.5 dakika
-- **Grup Lideri Kapanış:** 1-2 dakika
-- **Toplam Süre:** Yaklaşık 30-40 dakika (5 kişilik ekip için)
+- **Acilis:** 1-2 dakika
+- **Gereksinim sunumu:** 5-8 dakika
+- **Kapanis:** 1 dakika
+- **Toplam sure:** Yaklasik 8-12 dakika

@@ -1,0 +1,12 @@
+C:\Users\yusuf\projeler\fastPCB\fastPCB\backend\FastPCB.Models\bin\Debug\net8.0\FastPCB.Models.deps.json
+C:\Users\yusuf\projeler\fastPCB\fastPCB\backend\FastPCB.Models\bin\Debug\net8.0\FastPCB.Models.dll
+C:\Users\yusuf\projeler\fastPCB\fastPCB\backend\FastPCB.Models\bin\Debug\net8.0\FastPCB.Models.pdb
+C:\Users\yusuf\projeler\fastPCB\fastPCB\backend\FastPCB.Models\obj\Debug\net8.0\FastPCB.Models.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\yusuf\projeler\fastPCB\fastPCB\backend\FastPCB.Models\obj\Debug\net8.0\FastPCB.Models.AssemblyInfoInputs.cache
+C:\Users\yusuf\projeler\fastPCB\fastPCB\backend\FastPCB.Models\obj\Debug\net8.0\FastPCB.Models.AssemblyInfo.cs
+C:\Users\yusuf\projeler\fastPCB\fastPCB\backend\FastPCB.Models\obj\Debug\net8.0\FastPCB.Models.csproj.CoreCompileInputs.cache
+C:\Users\yusuf\projeler\fastPCB\fastPCB\backend\FastPCB.Models\obj\Debug\net8.0\FastPCB.Models.sourcelink.json
+C:\Users\yusuf\projeler\fastPCB\fastPCB\backend\FastPCB.Models\obj\Debug\net8.0\FastPCB.Models.dll
+C:\Users\yusuf\projeler\fastPCB\fastPCB\backend\FastPCB.Models\obj\Debug\net8.0\refint\FastPCB.Models.dll
+C:\Users\yusuf\projeler\fastPCB\fastPCB\backend\FastPCB.Models\obj\Debug\net8.0\FastPCB.Models.pdb
+C:\Users\yusuf\projeler\fastPCB\fastPCB\backend\FastPCB.Models\obj\Debug\net8.0\ref\FastPCB.Models.dll

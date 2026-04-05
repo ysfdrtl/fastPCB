@@ -1,362 +1,78 @@
-Bu API, kullanıcıların PCB üretimi için sipariş oluşturmasını,
-gerber dosyalarını yüklemesini, fiyat hesaplaması yapmasını ve
-sipariş durumunu takip etmesini sağlayan bir web servisidir.
+# API Tasarimi - OpenAPI Specification
 
-Sistem üç ana bileşenden oluşur:
+**OpenAPI Spesifikasyon Dosyasi:** [lamine.yaml](lamine.yaml)
 
-- Kullanıcı yönetimi (kayıt, giriş, profil güncelleme)
-- PCB sipariş sistemi
-- Yönetici kontrol paneli
+Bu dokuman, FastPCB projesinin REST API yapisini ozetler. API tasarimi OpenAPI mantigina uygun sekilde dusunulmus ve temel kaynaklar `auth`, `projects`, `comments`, `likes` ve `reports` etrafinda kurgulanmistir.
 
+## API'nin Temel Kaynaklari
 
-# API Tasarımı - OpenAPI Specification Örneği
+- `auth`: Kayit ve giris islemleri
+- `projects`: Proje olusturma, listeleme, detay ve dosya yukleme
+- `comments`: Projelere yorum ekleme ve yorum silme
+- `likes`: Proje begenme ve kullanicinin begenilerini listeleme
+- `reports`: Proje raporlama ve kullanicinin kendi raporlarini gorme
 
-**OpenAPI Spesifikasyon Dosyası:** Bu doküman, OpenAPI Specification (OAS) 3.0 standardına göre hazırlanmış örnek bir API tasarımını içermektedir.
-
-## OpenAPI Nedir?
-
-**OpenAPI** (eski adıyla Swagger), RESTful API'lerin tasarımı, dokümantasyonu ve kullanımı için kullanılan açık bir spesifikasyondur. OpenAPI, API'lerin yapısını, endpoint'lerini, parametrelerini, request/response formatlarını ve güvenlik gereksinimlerini standart bir formatta tanımlamanıza olanak sağlar.
-
-### Temel Özellikler:
-
-- **Standart Format**: YAML veya JSON formatında API'yi tanımlar
-- **Otomatik Dokümantasyon**: Swagger UI gibi araçlarla interaktif dokümantasyon oluşturur
-- **Kod Üretimi**: Client ve server kodlarını otomatik olarak üretebilir
-- **Test Kolaylığı**: API'leri doğrudan dokümantasyondan test edebilirsiniz
-- **Takım İşbirliği**: Frontend ve backend ekipleri arasında net bir sözleşme sağlar
-
-### Neden Kullanılır?
-
-1. **Tutarlılık**: Tüm API'ler aynı standartta dokümante edilir
-2. **Zaman Tasarrufu**: Otomatik dokümantasyon ve kod üretimi
-3. **Hata Azaltma**: API tasarımı kodlamadan önce netleşir
-4. **Kolay Entegrasyon**: Farklı ekipler ve sistemler arasında entegrasyon kolaylaşır
-
-## Genel Bakış
-
-Bu örnek, bir e-ticaret platformu için kullanıcı ve ürün yönetimi API'sini göstermektedir.
-
-## OpenAPI Specification
+## OpenAPI Specification Ozeti
 
 ```yaml
 openapi: 3.0.3
 info:
-  title: PCB Üretim Platformu API
-  description: |
-    Kullanıcıların PCB üretimi için sipariş verebildiği web platformunun REST API'si.
-    
-    ## Özellikler
-    - Kullanıcı kayıt ve giriş sistemi
-    - PCB sipariş oluşturma
-    - Gerber dosyası yükleme
-    - Otomatik fiyat hesaplama
-    - Sipariş takibi
-    - Online ödeme sistemi
-    - Destek talep sistemi
-    - Admin yönetim paneli
-
+  title: FastPCB API
   version: 1.0.0
+  description: PCB projelerinin yuklendigi ve paylasildigi topluluk platformu API'si
 
 servers:
-  - url: http://localhost:3000/v1
-    description: Development Server
+  - url: http://localhost:5000/api
+    description: Development server
 
 tags:
   - name: auth
-    description: Kullanıcı kimlik doğrulama işlemleri
-  - name: users
-    description: Kullanıcı profil işlemleri
-  - name: orders
-    description: PCB sipariş işlemleri
-  - name: tickets
-    description: Destek talep sistemi
-  - name: admin
-    description: Yönetici işlemleri
+  - name: projects
+  - name: comments
+  - name: likes
+  - name: reports
 
 paths:
-
-  /auth/register:
+  /Auth/register:
     post:
-      tags:
-        - auth
-      summary: Üye Olma
-      description: Kullanıcının sisteme yeni bir hesap oluşturmasını sağlar.
-      operationId: registerUser
-      responses:
-        '201':
-          description: Kullanıcı başarıyla oluşturuldu
-
-  /auth/login:
+      summary: Yeni kullanici kaydi
+  /Auth/login:
     post:
-      tags:
-        - auth
-      summary: Giriş Yapma
-      description: Kullanıcının email ve şifre ile sisteme giriş yapmasını sağlar.
-      operationId: loginUser
-      responses:
-        '200':
-          description: Giriş başarılı
-
-  /users/profile:
-    put:
-      tags:
-        - users
-      summary: Profil Bilgileri Güncelleme
-      description: Kullanıcı ad, soyad, adres ve diğer kişisel bilgilerini güncelleyebilir.
-      operationId: updateUserProfile
-      responses:
-        '200':
-          description: Profil başarıyla güncellendi
-
-  /orders:
-    post:
-      tags:
-        - orders
-      summary: Sipariş Oluşturma
-      description: Kullanıcının yeni bir PCB siparişi oluşturmasını sağlar.
-      operationId: createOrder
-      responses:
-        '201':
-          description: Sipariş oluşturuldu
-
-  /orders/{orderId}/upload:
-    post:
-      tags:
-        - orders
-      summary: Gerber Dosyası Yükleme
-      description: Kullanıcı PCB üretimi için gerekli Gerber dosyalarını sisteme yükler.
-      operationId: uploadGerber
-      responses:
-        '200':
-          description: Dosya başarıyla yüklendi
-
-  /orders/{orderId}/specifications:
-    post:
-      tags:
-        - orders
-      summary: PCB Teknik Bilgileri Girme
-      description: PCB için gerekli teknik özellikler girilir (katman sayısı, minimum iz aralığı, kullanılan malzeme vb.).
-      operationId: addPcbSpecifications
-      responses:
-        '200':
-          description: Teknik bilgiler kaydedildi
-
-  /orders/{orderId}/price:
+      summary: Kullanici girisi
+  /projects:
     get:
-      tags:
-        - orders
-      summary: Otomatik Fiyat Hesaplama
-      description: Girilen PCB özelliklerine göre sistem otomatik olarak fiyat hesaplar.
-      operationId: calculatePrice
-      responses:
-        '200':
-          description: Fiyat başarıyla hesaplandı
-
-  /orders/{orderId}/status:
+      summary: Proje listesi
+    post:
+      summary: Yeni proje olusturma
+  /projects/{projectId}:
     get:
-      tags:
-        - orders
-      summary: Sipariş Durumu Takibi
-      description: Kullanıcı siparişinin hangi aşamada olduğunu görüntüler.
-      operationId: getOrderStatus
-      responses:
-        '200':
-          description: Sipariş durumu getirildi
-
-  /orders/{orderId}/payment:
+      summary: Proje detayi
+  /projects/{projectId}/details:
     post:
-      tags:
-        - orders
-      summary: Online Ödeme
-      description: Kullanıcı sipariş için online ödeme işlemini gerçekleştirir.
-      operationId: makePayment
-      responses:
-        '200':
-          description: Ödeme başarılı
-
-  /orders/{orderId}/confirm:
+      summary: Teknik detay kaydetme
+  /projects/{projectId}/files:
     post:
-      tags:
-        - orders
-      summary: Sipariş Aktifleştirme
-      description: Ödeme kontrolü sonrası sipariş üretim sürecine alınır.
-      operationId: confirmOrder
-      responses:
-        '200':
-          description: Sipariş aktif hale getirildi
-
-  /orders/{orderId}:
+      summary: Proje dosyasi yukleme
+  /projects/{projectId}/comments:
+    get:
+      summary: Yorumlari listeleme
+    post:
+      summary: Yorum ekleme
+  /projects/{projectId}/like:
+    post:
+      summary: Projeyi begenme
     delete:
-      tags:
-        - orders
-      summary: Sipariş Silme
-      description: Üretim aşamasına geçmemiş siparişler kullanıcı tarafından silinebilir.
-      operationId: deleteOrder
-      responses:
-        '204':
-          description: Sipariş silindi
-
-  /tickets:
+      summary: Begeniyi kaldirma
+  /projects/{projectId}/report:
     post:
-      tags:
-        - tickets
-      summary: Destek Talebi Oluşturma
-      description: Kullanıcı teknik destek almak için yeni bir destek talebi oluşturur.
-      operationId: createTicket
-      responses:
-        '201':
-          description: Destek talebi oluşturuldu
-
-  /tickets/{ticketId}/response:
-    post:
-      tags:
-        - admin
-      summary: Destek Talebine Cevap Verme
-      description: Yönetici panelinden destek talebine cevap verilir.
-      operationId: respondTicket
-      responses:
-        '200':
-          description: Talep cevaplandı
-
-  /admin/orders:
-    get:
-      tags:
-        - admin
-      summary: Tüm Siparişleri Görüntüleme
-      description: Yönetici sistemdeki tüm siparişleri görüntüleyebilir.
-      operationId: listAllOrders
-      responses:
-        '200':
-          description: Sipariş listesi getirildi
-
-  /admin/orders/{orderId}/status:
-    put:
-      tags:
-        - admin
-      summary: Sipariş Durumu Güncelleme
-      description: Yönetici sipariş durumunu güncelleyebilir (inceleme, üretim, kargoda vb.).
-      operationId: updateOrderStatus
-      responses:
-        '200':
-          description: Sipariş durumu güncellendi
-
-  /admin/users:
-    get:
-      tags:
-        - admin
-      summary: Kullanıcı Yönetimi
-      description: Yönetici sistemde kayıtlı kullanıcıları görüntüler ve yönetir.
-      operationId: manageUsers
-      responses:
-        '200':
-          description: Kullanıcı listesi getirildi
+      summary: Projeyi raporlama
 ```
 
-## API Tasarım Prensipleri
+## API Tasarim Kararlari
 
-### 1. RESTful Yaklaşım
-- **Kaynak odaklı URL'ler**: `/users`, `/products`, `/orders`
-- **HTTP metodları**: GET (okuma), POST (oluşturma), PUT (güncelleme), DELETE (silme)
-- **Durum kodları**: 200 (başarılı), 201 (oluşturuldu), 404 (bulunamadı), vb.
+1. JWT ile korunan endpointler yazma islemlerinde kullanilir.
+2. Listeleme endpointlerinde filtreleme ve sayfalama desteklenir.
+3. Dosya yukleme `multipart/form-data` ile yapilir.
+4. Hata durumlarinda anlamli HTTP kodlari ve mesajlar donulur.
 
-### 2. Versiyonlama
-- URL tabanlı versiyonlama: `/v1/users`
-- Geriye dönük uyumluluk için önemli
-
-### 3. Güvenlik
-- **JWT Authentication**: Bearer token ile kimlik doğrulama
-- **HTTPS**: Tüm endpoint'ler için zorunlu
-- **Rate Limiting**: API kötüye kullanımını önleme
-
-### 4. Sayfalama
-- `page` ve `limit` parametreleri
-- Response'da pagination metadata
-
-### 5. Filtreleme ve Sıralama
-- Query parametreleri ile filtreleme
-- Örnek: `?category=Elektronik&minPrice=1000`
-
-### 6. Hata Yönetimi
-- Standart hata formatı
-- Anlamlı hata kodları ve mesajları
-- Detaylı hata bilgileri (field-level validation)
-
-### 7. Dokümantasyon
-- OpenAPI Specification ile otomatik dokümantasyon
-- Swagger UI ile interaktif API testi
-- Örnek request/response'lar
-
-## Kullanım Örnekleri
-
-### Kullanıcı Kaydı
-```bash
-curl -X POST http://localhost:3000/v1/auth/register \
-  -H "Content-Type: application/json" \
-  -d '{
-    "email": "yusuf@example.com",
-    "password": "12345678",
-    "firstName": "Yusuf",
-    "lastName": "Doruatlı"
-  }'
-```
-
-### Giriş Yapma
-```bash
-curl -X POST http://localhost:3000/v1/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{
-    "email": "yusuf@example.com",
-    "password": "12345678"
-  }'
-```
-
-### Sipariş Oluşturma
-```bash
-curl -X POST http://localhost:3000/v1/orders \
-  -H "Authorization: Bearer <JWT_TOKEN>" \
-  -H "Content-Type: application/json"
-```
-
-### Gerber Dosyası Yükleme
-```bash
-curl -X POST http://localhost:3000/v1/orders/123/upload \
-  -H "Authorization: Bearer <JWT_TOKEN>" \
-  -F "file=@pcb_design.zip"
-```
-
-### Fiyat Hesaplama
-```bash
-curl -X GET http://localhost:3000/v1/orders/123/price \
-  -H "Authorization: Bearer <JWT_TOKEN>"
-```
-
-### Sipariş Durumu Görme
-```bash
-curl -X GET http://localhost:3000/v1/orders/123/status \
-  -H "Authorization: Bearer <JWT_TOKEN>"
-```
-
-### Destek Talebi Oluşturma
-```bash
-curl -X POST http://localhost:3000/v1/tickets \
-  -H "Authorization: Bearer <JWT_TOKEN>" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "subject": "PCB üretim süresi",
-    "message": "Siparişim ne zaman üretime girecek?"
-  }'
-```
-
-## Araçlar ve Kaynaklar
-
-### OpenAPI Editörleri
-- [Swagger Editor](https://editor.swagger.io/) - Online OpenAPI editörü
-- [VS Code OpenAPI Extension](https://marketplace.visualstudio.com/items?itemName=42Crunch.vscode-openapi)
-
-### Dokümantasyon Araçları
-- [Swagger UI](https://swagger.io/tools/swagger-ui/) - İnteraktif API dokümantasyonu
-- [Postman](https://www.postman.com/) - API testi
-
-### Validasyon
-- [OpenAPI Validator](https://apitools.dev/swagger-parser/online/) - Spec doğrulama
-- [Spectral](https://stoplight.io/open-source/spectral) - API linting
+Detayli sema ve endpoint tanimlari icin [lamine.yaml](lamine.yaml) dosyasi referans alinmalidir.

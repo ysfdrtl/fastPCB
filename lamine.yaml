@@ -1,211 +1,317 @@
 openapi: 3.0.3
 info:
-  title: PCB Üretim Platformu API
-  description: |
-    Kullanıcıların PCB üretimi için sipariş verebildiği web platformunun REST API'si.
-    
-    ## Özellikler
-    - Kullanıcı kayıt ve giriş sistemi
-    - PCB sipariş oluşturma
-    - Gerber dosyası yükleme
-    - Otomatik fiyat hesaplama
-    - Sipariş takibi
-    - Online ödeme sistemi
-    - Destek talep sistemi
-    - Admin yönetim paneli
-
+  title: FastPCB Paylasim Platformu API
   version: 1.0.0
+  description: |
+    FastPCB, kullanicilarin PCB tasarim dosyalarini yukleyip paylasabildigi
+    bir topluluk platformunun REST API tanimidir.
+
+    Temel ozellikler:
+    - Kullanici kaydi ve girisi
+    - PCB projesi olusturma
+    - Proje listeleme ve detay goruntuleme
+    - Dosya yukleme
+    - Yorum ve raporlama
 
 servers:
-  - url: http://localhost:3000/v1
-    description: Development Server
+  - url: http://localhost:5000/api
+    description: Development server
 
 tags:
   - name: auth
-    description: Kullanıcı kimlik doğrulama işlemleri
+    description: Kimlik dogrulama islemleri
   - name: users
-    description: Kullanıcı profil işlemleri
-  - name: orders
-    description: PCB sipariş işlemleri
-  - name: tickets
-    description: Destek talep sistemi
-  - name: admin
-    description: Yönetici işlemleri
+    description: Kullanici profili islemleri
+  - name: projects
+    description: PCB proje paylasim islemleri
+  - name: comments
+    description: Proje yorumlari
+  - name: likes
+    description: Proje begeni islemleri
+  - name: reports
+    description: Icerik raporlama islemleri
 
 paths:
-
   /auth/register:
     post:
-      tags:
-        - auth
-      summary: Üye Olma
-      description: Kullanıcının sisteme yeni bir hesap oluşturmasını sağlar.
+      tags: [auth]
+      summary: Kullanici kaydi
       operationId: registerUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password, firstName, lastName]
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  minLength: 8
+                firstName:
+                  type: string
+                lastName:
+                  type: string
       responses:
         '201':
-          description: Kullanıcı başarıyla oluşturuldu
+          description: Kullanici basariyla olusturuldu
 
   /auth/login:
     post:
-      tags:
-        - auth
-      summary: Giriş Yapma
-      description: Kullanıcının email ve şifre ile sisteme giriş yapmasını sağlar.
+      tags: [auth]
+      summary: Kullanici girisi
       operationId: loginUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
       responses:
         '200':
-          description: Giriş başarılı
+          description: Giris basarili
 
-  /users/profile:
+  /users/{userId}:
+    get:
+      tags: [users]
+      summary: Profil getir
+      operationId: getUserProfile
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Profil getirildi
     put:
-      tags:
-        - users
-      summary: Profil Bilgileri Güncelleme
-      description: Kullanıcı ad, soyad, adres ve diğer kişisel bilgilerini güncelleyebilir.
+      tags: [users]
+      summary: Profil guncelle
       operationId: updateUserProfile
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
       responses:
         '200':
-          description: Profil başarıyla güncellendi
+          description: Profil guncellendi
 
-  /orders:
+  /users/{userId}/projects:
+    get:
+      tags: [users, projects]
+      summary: Kullanicinin projelerini listele
+      operationId: getUserProjects
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Proje listesi getirildi
+
+  /projects:
+    get:
+      tags: [projects]
+      summary: Proje listele
+      operationId: listProjects
+      parameters:
+        - name: userId
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: search
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: status
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [Draft, Published, Featured, Archived, Removed]
+        - name: hasFile
+          in: query
+          required: false
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: Projeler listelendi
     post:
-      tags:
-        - orders
-      summary: Sipariş Oluşturma
-      description: Kullanıcının yeni bir PCB siparişi oluşturmasını sağlar.
-      operationId: createOrder
+      tags: [projects]
+      summary: Yeni proje olustur
+      operationId: createProject
       responses:
         '201':
-          description: Sipariş oluşturuldu
+          description: Proje olusturuldu
 
-  /orders/{orderId}/upload:
-    post:
-      tags:
-        - orders
-      summary: Gerber Dosyası Yükleme
-      description: Kullanıcı PCB üretimi için gerekli Gerber dosyalarını sisteme yükler.
-      operationId: uploadGerber
-      responses:
-        '200':
-          description: Dosya başarıyla yüklendi
-
-  /orders/{orderId}/specifications:
-    post:
-      tags:
-        - orders
-      summary: PCB Teknik Bilgileri Girme
-      description: PCB için gerekli teknik özellikler girilir (katman sayısı, minimum iz aralığı, kullanılan malzeme vb.).
-      operationId: addPcbSpecifications
-      responses:
-        '200':
-          description: Teknik bilgiler kaydedildi
-
-  /orders/{orderId}/price:
+  /projects/{projectId}:
     get:
-      tags:
-        - orders
-      summary: Otomatik Fiyat Hesaplama
-      description: Girilen PCB özelliklerine göre sistem otomatik olarak fiyat hesaplar.
-      operationId: calculatePrice
+      tags: [projects]
+      summary: Proje detayi getir
+      operationId: getProject
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: integer
       responses:
         '200':
-          description: Fiyat başarıyla hesaplandı
-
-  /orders/{orderId}/status:
-    get:
-      tags:
-        - orders
-      summary: Sipariş Durumu Takibi
-      description: Kullanıcı siparişinin hangi aşamada olduğunu görüntüler.
-      operationId: getOrderStatus
-      responses:
-        '200':
-          description: Sipariş durumu getirildi
-
-  /orders/{orderId}/payment:
-    post:
-      tags:
-        - orders
-      summary: Online Ödeme
-      description: Kullanıcı sipariş için online ödeme işlemini gerçekleştirir.
-      operationId: makePayment
-      responses:
-        '200':
-          description: Ödeme başarılı
-
-  /orders/{orderId}/confirm:
-    post:
-      tags:
-        - orders
-      summary: Sipariş Aktifleştirme
-      description: Ödeme kontrolü sonrası sipariş üretim sürecine alınır.
-      operationId: confirmOrder
-      responses:
-        '200':
-          description: Sipariş aktif hale getirildi
-
-  /orders/{orderId}:
+          description: Proje detayi getirildi
     delete:
-      tags:
-        - orders
-      summary: Sipariş Silme
-      description: Üretim aşamasına geçmemiş siparişler kullanıcı tarafından silinebilir.
-      operationId: deleteOrder
+      tags: [projects]
+      summary: Proje sil
+      operationId: deleteProject
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: integer
       responses:
         '204':
-          description: Sipariş silindi
+          description: Proje silindi
 
-  /tickets:
+  /projects/{projectId}/details:
     post:
-      tags:
-        - tickets
-      summary: Destek Talebi Oluşturma
-      description: Kullanıcı teknik destek almak için yeni bir destek talebi oluşturur.
-      operationId: createTicket
+      tags: [projects]
+      summary: Proje teknik detaylarini kaydet
+      operationId: saveProjectDetails
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                layers:
+                  type: integer
+                material:
+                  type: string
+                minDistance:
+                  type: number
+                  format: double
+                quantity:
+                  type: integer
       responses:
-        '201':
-          description: Destek talebi oluşturuldu
+        '200':
+          description: Proje detaylari kaydedildi
 
-  /tickets/{ticketId}/response:
+  /projects/{projectId}/files:
     post:
-      tags:
-        - admin
-      summary: Destek Talebine Cevap Verme
-      description: Yönetici panelinden destek talebine cevap verilir.
-      operationId: respondTicket
+      tags: [projects]
+      summary: Projeye dosya yukle
+      operationId: uploadProjectFile
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: integer
       responses:
         '200':
-          description: Talep cevaplandı
+          description: Dosya yuklendi
 
-  /admin/orders:
+  /projects/{projectId}/comments:
     get:
-      tags:
-        - admin
-      summary: Tüm Siparişleri Görüntüleme
-      description: Yönetici sistemdeki tüm siparişleri görüntüleyebilir.
-      operationId: listAllOrders
+      tags: [comments]
+      summary: Proje yorumlarini listele
+      operationId: listComments
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: integer
       responses:
         '200':
-          description: Sipariş listesi getirildi
+          description: Yorumlar getirildi
+    post:
+      tags: [comments]
+      summary: Projeye yorum ekle
+      operationId: createComment
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: integer
+        responses:
+          '201':
+            description: Yorum eklendi
 
-  /admin/orders/{orderId}/status:
-    put:
-      tags:
-        - admin
-      summary: Sipariş Durumu Güncelleme
-      description: Yönetici sipariş durumunu güncelleyebilir (inceleme, üretim, kargoda vb.).
-      operationId: updateOrderStatus
+  /projects/{projectId}/like:
+    post:
+      tags: [likes]
+      summary: Projeyi begen
+      operationId: likeProject
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: integer
       responses:
         '200':
-          description: Sipariş durumu güncellendi
+          description: Proje begenildi
+    delete:
+      tags: [likes]
+      summary: Proje begenisini kaldir
+      operationId: unlikeProject
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Begeni kaldirildi
 
-  /admin/users:
+  /likes/me:
     get:
-      tags:
-        - admin
-      summary: Kullanıcı Yönetimi
-      description: Yönetici sistemde kayıtlı kullanıcıları görüntüler ve yönetir.
-      operationId: manageUsers
+      tags: [likes]
+      summary: Giris yapan kullanicinin begendigi projeleri listele
+      operationId: listMyLikes
       responses:
         '200':
-          description: Kullanıcı listesi getirildi
+          description: Begenilen projeler getirildi
+
+  /projects/{projectId}/report:
+    post:
+      tags: [reports]
+      summary: Projeyi raporla
+      operationId: reportProject
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Rapor alindi
