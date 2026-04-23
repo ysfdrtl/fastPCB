@@ -5,15 +5,17 @@ namespace FastPCB.Data.Extensions
 {
     public static class DataServiceCollectionExtensions
     {
+        private static readonly MySqlServerVersion FastPcbMySqlVersion = new(new Version(8, 0, 36));
+
         /// <summary>
-        /// Veritabanı bağlamını ve gerekli servisleri DI container'a ekler.
+        /// Veritabani baglamini ve gerekli servisleri DI container'a ekler.
         /// </summary>
         public static IServiceCollection AddFastPCBData(this IServiceCollection services, string connectionString)
         {
             services.AddDbContext<FastPCBContext>(options =>
                 options.UseMySql(
                     connectionString,
-                    ServerVersion.AutoDetect(connectionString),
+                    FastPcbMySqlVersion,
                     builder => builder.MigrationsAssembly("FastPCB.Data")
                 )
             );
@@ -22,34 +24,26 @@ namespace FastPCB.Data.Extensions
         }
 
         /// <summary>
-        /// Migration'ı otomatik olarak çalıştırır.
+        /// Migration'i otomatik olarak calistirir.
         /// </summary>
         public static async Task MigrateDatabaseAsync(this IServiceProvider serviceProvider)
         {
-            using (var scope = serviceProvider.CreateScope())
-            {
-                var dbContext = scope.ServiceProvider.GetRequiredService<FastPCBContext>();
-                
-                // Migration'ları uygula
-                await dbContext.Database.MigrateAsync();
-            }
+            using var scope = serviceProvider.CreateScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<FastPCBContext>();
+
+            await dbContext.Database.MigrateAsync();
         }
 
         /// <summary>
-        /// Veritabanını başlatır ve seed data'sı ekler.
+        /// Veritabanini baslatir ve seed data'si ekler.
         /// </summary>
         public static async Task InitializeDatabaseAsync(this IServiceProvider serviceProvider)
         {
-            using (var scope = serviceProvider.CreateScope())
-            {
-                var dbContext = scope.ServiceProvider.GetRequiredService<FastPCBContext>();
+            using var scope = serviceProvider.CreateScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<FastPCBContext>();
 
-                // Migration'ları uygula
-                await dbContext.Database.MigrateAsync();
-
-                // Ensure database is created
-                await dbContext.Database.EnsureCreatedAsync();
-            }
+            await dbContext.Database.MigrateAsync();
+            await dbContext.Database.EnsureCreatedAsync();
         }
     }
 }

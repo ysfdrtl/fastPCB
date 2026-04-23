@@ -262,14 +262,14 @@ namespace FastPCB.Data.Migrations
                         new
                         {
                             Id = 1,
-                            Address = "Ankara, Turkey",
-                            CreatedAt = new DateTime(2026, 4, 5, 12, 32, 4, 124, DateTimeKind.Utc).AddTicks(1872),
+                            Address = "Isparta, Turkey",
+                            CreatedAt = new DateTime(2026, 4, 23, 22, 20, 37, 869, DateTimeKind.Utc).AddTicks(4290),
                             Email = "test@fastpcb.com",
                             FirstName = "Test",
                             LastName = "User",
                             PasswordHash = "100000.Tba38WWIwK53hEPbMlTckA==.YD7TDB6tiwSXaLZHp9kT52il8qibRa33aNpJ9G2sqPw=",
                             Phone = "+905551234567",
-                            UpdatedAt = new DateTime(2026, 4, 5, 12, 32, 4, 124, DateTimeKind.Utc).AddTicks(1873)
+                            UpdatedAt = new DateTime(2026, 4, 23, 22, 20, 37, 869, DateTimeKind.Utc).AddTicks(4291)
                         });
                 });
 
