@@ -2,7 +2,9 @@
 
 ## Sunum Videosu
 
-> **Video Linki:** Sunum videosu hazirlandiginda buraya eklenecektir.
+> **Video Linki:**
+-[Backend tanıtım videosu](https://youtu.be/ETuhkFNrMQc)
+-[Frontend tanıtım videosu](https://youtu.be/d2O5ogxzZPA)
 
 ---
 
