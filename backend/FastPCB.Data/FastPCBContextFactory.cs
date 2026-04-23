@@ -6,8 +6,6 @@ namespace FastPCB.Data
 {
     public class FastPCBContextFactory : IDesignTimeDbContextFactory<FastPCBContext>
     {
-        private static readonly MySqlServerVersion FastPcbMySqlVersion = new(new Version(8, 0, 36));
-
         // EF Core migration komutlari icin host bagimsiz bir DbContext uretir.
         public FastPCBContext CreateDbContext(string[] args)
         {
@@ -26,7 +24,7 @@ namespace FastPCB.Data
             var optionsBuilder = new DbContextOptionsBuilder<FastPCBContext>();
             optionsBuilder.UseMySql(
                 connectionString,
-                FastPcbMySqlVersion,
+                ServerVersion.AutoDetect(connectionString),
                 builder => builder.MigrationsAssembly("FastPCB.Data"));
 
             return new FastPCBContext(optionsBuilder.Options);
