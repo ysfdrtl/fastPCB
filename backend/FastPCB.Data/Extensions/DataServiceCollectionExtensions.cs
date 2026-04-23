@@ -5,8 +5,6 @@ namespace FastPCB.Data.Extensions
 {
     public static class DataServiceCollectionExtensions
     {
-        private static readonly MySqlServerVersion FastPcbMySqlVersion = new(new Version(8, 0, 36));
-
         /// <summary>
         /// Veritabani baglamini ve gerekli servisleri DI container'a ekler.
         /// </summary>
@@ -15,7 +13,7 @@ namespace FastPCB.Data.Extensions
             services.AddDbContext<FastPCBContext>(options =>
                 options.UseMySql(
                     connectionString,
-                    FastPcbMySqlVersion,
+                    ServerVersion.AutoDetect(connectionString),
                     builder => builder.MigrationsAssembly("FastPCB.Data")
                 )
             );
