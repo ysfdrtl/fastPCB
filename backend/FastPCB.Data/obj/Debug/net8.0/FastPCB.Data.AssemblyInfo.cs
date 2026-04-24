@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("FastPCB.Data")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+61d4281851b4273243ba333a1045d781a6a7d52f")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3f6bb891e80c6b4a8a28b211e529193639bd7792")]
 [assembly: System.Reflection.AssemblyProductAttribute("FastPCB.Data")]
 [assembly: System.Reflection.AssemblyTitleAttribute("FastPCB.Data")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

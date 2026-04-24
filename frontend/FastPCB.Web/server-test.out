@@ -1,0 +1,6 @@
+FastPCB frontend booting {
+  root: 'C:\\Users\\yusuf\\projeler\\fastPCB\\fastPCB\\frontend\\FastPCB.Web\\dist',
+  port: 8124,
+  railwayPort: '8124'
+}
+FastPCB frontend listening on http://0.0.0.0:8124
