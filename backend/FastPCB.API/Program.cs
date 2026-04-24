@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using MySqlConnector;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -71,8 +72,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddAuthorization();
 
 // Database configuration
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
-    ?? throw new InvalidOperationException("ConnectionStrings:DefaultConnection tanimli degil.");
+var connectionString = ResolveMySqlConnectionString(builder.Configuration);
 builder.Services.AddFastPCBData(connectionString);
 
 // Service registration
@@ -159,3 +159,36 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+static string ResolveMySqlConnectionString(IConfiguration configuration)
+{
+    var configuredConnectionString =
+        configuration.GetConnectionString("DefaultConnection")
+        ?? configuration["MYSQL_URL"]
+        ?? configuration["DATABASE_URL"];
+
+    if (string.IsNullOrWhiteSpace(configuredConnectionString))
+    {
+        throw new InvalidOperationException("ConnectionStrings:DefaultConnection, MYSQL_URL veya DATABASE_URL tanimli degil.");
+    }
+
+    if (Uri.TryCreate(configuredConnectionString, UriKind.Absolute, out var databaseUrl)
+        && (databaseUrl.Scheme.Equals("mysql", StringComparison.OrdinalIgnoreCase)
+            || databaseUrl.Scheme.Equals("mariadb", StringComparison.OrdinalIgnoreCase)))
+    {
+        var credentials = databaseUrl.UserInfo.Split(':', 2);
+        var databaseName = databaseUrl.AbsolutePath.TrimStart('/');
+
+        return new MySqlConnectionStringBuilder
+        {
+            Server = databaseUrl.Host,
+            Port = (uint)(databaseUrl.IsDefaultPort ? 3306 : databaseUrl.Port),
+            Database = Uri.UnescapeDataString(databaseName),
+            UserID = credentials.Length > 0 ? Uri.UnescapeDataString(credentials[0]) : string.Empty,
+            Password = credentials.Length > 1 ? Uri.UnescapeDataString(credentials[1]) : string.Empty,
+            SslMode = MySqlSslMode.Preferred
+        }.ConnectionString;
+    }
+
+    return configuredConnectionString;
+}
