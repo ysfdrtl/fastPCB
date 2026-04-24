@@ -10,6 +10,9 @@ COPY package*.json ./
 RUN npm ci
 RUN chmod +x node_modules/.bin/*
 
+# Fix permissions for executables in node_modules (Alpine Linux / npm ci issue)
+RUN chmod +x node_modules/.bin/*
+
 COPY . ./
 RUN npm run build
 
