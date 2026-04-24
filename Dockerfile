@@ -1,26 +1,21 @@
 # Build stage
-FROM node:20-alpine AS build
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /app
 
-# Vite reads VITE_* variables during build time.
-ARG VITE_API_BASE_URL
-ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
+# Copy the repository so project references can be resolved.
+COPY . .
 
-COPY frontend/FastPCB.Web/package*.json ./
-RUN npm ci
-RUN chmod +x node_modules/.bin/*
-
-COPY frontend/FastPCB.Web/ ./
-RUN npm run build
+# Restore and publish the backend project.
+RUN dotnet publish backend/FastPCB.API -c Release -o out
 
 # Runtime stage
-FROM node:20-alpine AS runtime
+FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
 
-COPY --from=build /app/dist ./dist
-COPY frontend/FastPCB.Web/server.cjs ./server.cjs
+# Copy only the published output into the final image.
+COPY --from=build /app/out .
 
 # Railway injects PORT at runtime; 8080 is the local/container fallback.
 EXPOSE 8080
 
-ENTRYPOINT ["node", "server.cjs"]
+ENTRYPOINT ["sh", "-c", "dotnet FastPCB.API.dll --urls http://0.0.0.0:${PORT:-8080}"]

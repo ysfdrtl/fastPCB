@@ -18,5 +18,4 @@ COPY --from=build /app/out .
 # Railway injects PORT at runtime; 8080 is the local/container fallback.
 EXPOSE 8080
 
-ENTRYPOINT ["dotnet", "FastPCB.API.dll"]
-CMD ["--urls", "http://0.0.0.0:8080"]
+ENTRYPOINT ["sh", "-c", "dotnet FastPCB.API.dll --urls http://0.0.0.0:${PORT:-8080}"]
