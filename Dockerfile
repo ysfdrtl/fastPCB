@@ -8,6 +8,7 @@ ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
 
 COPY frontend/FastPCB.Web/package*.json ./
 RUN npm ci
+RUN chmod +x node_modules/.bin/*
 
 COPY frontend/FastPCB.Web/ ./
 RUN npm run build
