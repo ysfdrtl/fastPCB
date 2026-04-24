@@ -3,7 +3,8 @@ const { createServer } = require("node:http");
 const { extname, join, normalize, resolve } = require("node:path");
 
 const root = resolve(__dirname, "dist");
-const port = Number.parseInt(process.env.PORT ?? "8080", 10);
+const configuredPort = Number.parseInt(process.env.PORT || "8080", 10);
+const port = Number.isNaN(configuredPort) ? 8080 : configuredPort;
 const host = "0.0.0.0";
 
 const contentTypes = {
@@ -51,6 +52,17 @@ const server = createServer((request, response) => {
   });
 
   createReadStream(filePath).pipe(response);
+});
+
+server.on("error", (error) => {
+  console.error("FastPCB frontend server failed to start", error);
+  process.exit(1);
+});
+
+console.log("FastPCB frontend booting", {
+  root,
+  port,
+  railwayPort: process.env.PORT ?? null
 });
 
 server.listen(port, host, () => {

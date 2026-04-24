@@ -22,4 +22,4 @@ COPY frontend/FastPCB.Web/server.js ./server.js
 # Railway injects PORT at runtime; 8080 is the local/container fallback.
 EXPOSE 8080
 
-CMD ["node", "server.js"]
+ENTRYPOINT ["node", "server.js"]
