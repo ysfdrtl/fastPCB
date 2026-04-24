@@ -13,7 +13,7 @@ namespace FastPCB.Data.Extensions
             services.AddDbContext<FastPCBContext>(options =>
                 options.UseMySql(
                     connectionString,
-                    ServerVersion.AutoDetect(connectionString),
+                    new MySqlServerVersion(new Version(8, 0, 0)),
                     builder => builder.MigrationsAssembly("FastPCB.Data")
                 )
             );
