@@ -9,6 +9,9 @@ ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
 COPY package*.json ./
 RUN npm ci
 
+# Fix permissions for executables in node_modules (Alpine Linux / npm ci issue)
+RUN chmod +x node_modules/.bin/*
+
 COPY . ./
 RUN npm run build
 
