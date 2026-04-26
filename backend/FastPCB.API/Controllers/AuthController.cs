@@ -107,6 +107,7 @@ namespace FastPCB.API.Controllers
         public string Email { get; set; } = string.Empty;
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
+        public string Role { get; set; } = string.Empty;
         public string Token { get; set; } = string.Empty;
 
         public static AuthResponse FromUser(FastPCB.Models.User user, string token)
@@ -117,6 +118,7 @@ namespace FastPCB.API.Controllers
                 Email = user.Email,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
+                Role = user.Role.ToString(),
                 Token = token
             };
         }

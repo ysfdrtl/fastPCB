@@ -20,6 +20,7 @@ export function Shell({ children }: PropsWithChildren) {
           <NavLink to="/">Kesfet</NavLink>
           <NavLink to="/upload">Yukle</NavLink>
           {user ? <NavLink to="/profile">Profil</NavLink> : null}
+          {user?.role === "Admin" ? <NavLink to="/admin">Admin</NavLink> : null}
         </nav>
 
         <div className="topbar-actions">

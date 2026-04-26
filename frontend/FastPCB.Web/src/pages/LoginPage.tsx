@@ -24,7 +24,8 @@ export function LoginPage() {
           id: response.id,
           email: response.email,
           firstName: response.firstName,
-          lastName: response.lastName
+          lastName: response.lastName,
+          role: response.role ?? "User"
         },
         response.token
       );

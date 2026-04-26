@@ -104,6 +104,7 @@ namespace FastPCB.Services
                 new(ClaimTypes.Email, user.Email),
                 new(ClaimTypes.GivenName, user.FirstName),
                 new(ClaimTypes.Surname, user.LastName),
+                new(ClaimTypes.Role, user.Role.ToString()),
                 new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 

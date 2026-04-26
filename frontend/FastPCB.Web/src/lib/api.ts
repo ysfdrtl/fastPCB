@@ -1,4 +1,4 @@
-import type { Comment, Project, ProjectListResponse, Report, UserSummary } from "../types";
+import type { AdminDashboardStats, AdminUser, Comment, PagedResponse, Project, ProjectListResponse, Report, UserSummary } from "../types";
 
 const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL as string | undefined)?.replace(/\/$/, "") ?? "http://localhost:5000/api";
 const API_ORIGIN = API_BASE_URL.replace(/\/api$/, "");
@@ -126,6 +126,51 @@ export const api = {
   },
   getMyReports(token: string) {
     return request<Report[]>("/reports/me", { token });
+  },
+  getAdminDashboard(token: string) {
+    return request<AdminDashboardStats>("/admin/dashboard", { token });
+  },
+  getAdminUsers(query: URLSearchParams, token: string) {
+    return request<PagedResponse<AdminUser>>(`/admin/users?${query.toString()}`, { token });
+  },
+  updateAdminUserRole(userId: number, role: string, token: string) {
+    return request<AdminUser>(`/admin/users/${userId}/role`, {
+      method: "PATCH",
+      token,
+      body: JSON.stringify({ role })
+    });
+  },
+  deleteAdminUser(userId: number, token: string) {
+    return request<void>(`/admin/users/${userId}`, {
+      method: "DELETE",
+      token
+    });
+  },
+  getAdminProjects(query: URLSearchParams, token: string) {
+    return request<PagedResponse<Project>>(`/admin/projects?${query.toString()}`, { token });
+  },
+  updateAdminProjectStatus(projectId: number, status: string, token: string) {
+    return request<Project>(`/admin/projects/${projectId}/status`, {
+      method: "PATCH",
+      token,
+      body: JSON.stringify({ status })
+    });
+  },
+  deleteAdminProject(projectId: number, token: string) {
+    return request<void>(`/admin/projects/${projectId}`, {
+      method: "DELETE",
+      token
+    });
+  },
+  getAdminReports(query: URLSearchParams, token: string) {
+    return request<PagedResponse<Report>>(`/admin/reports?${query.toString()}`, { token });
+  },
+  updateAdminReport(reportId: number, status: string, response: string, token: string) {
+    return request<Report>(`/admin/reports/${reportId}`, {
+      method: "PATCH",
+      token,
+      body: JSON.stringify({ status, response })
+    });
   }
 };
 

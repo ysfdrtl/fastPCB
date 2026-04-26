@@ -14,7 +14,11 @@ namespace FastPCB.Data.Extensions
                 options.UseMySql(
                     connectionString,
                     new MySqlServerVersion(new Version(8, 0, 0)),
-                    builder => builder.MigrationsAssembly("FastPCB.Data")
+                    builder =>
+                    {
+                        builder.MigrationsAssembly("FastPCB.Data");
+                        builder.EnableRetryOnFailure(5, TimeSpan.FromSeconds(10), null);
+                    }
                 )
             );
 

@@ -27,7 +27,8 @@ export function RegisterPage() {
           id: response.id,
           email: response.email,
           firstName: response.firstName,
-          lastName: response.lastName
+          lastName: response.lastName,
+          role: response.role ?? "User"
         },
         response.token
       );

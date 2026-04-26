@@ -1,5 +1,6 @@
 using System.Text;
 using FastPCB.API.Services;
+using FastPCB.Data.Configuration;
 using FastPCB.Data.Extensions;
 using FastPCB.Services;
 using Microsoft.Extensions.FileProviders;
@@ -7,8 +8,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using MySqlConnector;
 
+EnvFileLoader.LoadNearest(Directory.GetCurrentDirectory());
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container
@@ -72,7 +73,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddAuthorization();
 
 // Database configuration
-var connectionString = ResolveMySqlConnectionString(builder.Configuration);
+var connectionString = MySqlConnectionStringResolver.Resolve(builder.Configuration);
 builder.Services.AddFastPCBData(connectionString);
 
 // Service registration
@@ -81,6 +82,7 @@ builder.Services.AddScoped<IProjectService, ProjectService>();
 builder.Services.AddScoped<ICommentService, CommentService>();
 builder.Services.AddScoped<IProjectLikeService, ProjectLikeService>();
 builder.Services.AddScoped<IReportService, ReportService>();
+builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IProjectFileStorage, LocalProjectFileStorage>();
 
 // Enable CORS
@@ -159,36 +161,3 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
-
-static string ResolveMySqlConnectionString(IConfiguration configuration)
-{
-    var configuredConnectionString =
-        configuration.GetConnectionString("DefaultConnection")
-        ?? configuration["MYSQL_URL"]
-        ?? configuration["DATABASE_URL"];
-
-    if (string.IsNullOrWhiteSpace(configuredConnectionString))
-    {
-        throw new InvalidOperationException("ConnectionStrings:DefaultConnection, MYSQL_URL veya DATABASE_URL tanimli degil.");
-    }
-
-    if (Uri.TryCreate(configuredConnectionString, UriKind.Absolute, out var databaseUrl)
-        && (databaseUrl.Scheme.Equals("mysql", StringComparison.OrdinalIgnoreCase)
-            || databaseUrl.Scheme.Equals("mariadb", StringComparison.OrdinalIgnoreCase)))
-    {
-        var credentials = databaseUrl.UserInfo.Split(':', 2);
-        var databaseName = databaseUrl.AbsolutePath.TrimStart('/');
-
-        return new MySqlConnectionStringBuilder
-        {
-            Server = databaseUrl.Host,
-            Port = (uint)(databaseUrl.IsDefaultPort ? 3306 : databaseUrl.Port),
-            Database = Uri.UnescapeDataString(databaseName),
-            UserID = credentials.Length > 0 ? Uri.UnescapeDataString(credentials[0]) : string.Empty,
-            Password = credentials.Length > 1 ? Uri.UnescapeDataString(credentials[1]) : string.Empty,
-            SslMode = MySqlSslMode.Preferred
-        }.ConnectionString;
-    }
-
-    return configuredConnectionString;
-}

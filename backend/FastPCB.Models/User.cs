@@ -9,6 +9,7 @@ namespace FastPCB.Models
         public string LastName { get; set; } = string.Empty;
         public string Phone { get; set; } = string.Empty;
         public string Address { get; set; } = string.Empty;
+        public UserRole Role { get; set; } = UserRole.User;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
@@ -17,5 +18,11 @@ namespace FastPCB.Models
         public ICollection<Comment> Comments { get; set; } = new List<Comment>();
         public ICollection<Ticket> Reports { get; set; } = new List<Ticket>();
         public ICollection<ProjectLike> LikedProjects { get; set; } = new List<ProjectLike>();
+    }
+
+    public enum UserRole
+    {
+        User = 0,
+        Admin = 1
     }
 }

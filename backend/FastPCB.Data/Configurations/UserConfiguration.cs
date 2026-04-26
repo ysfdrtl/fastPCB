@@ -38,6 +38,12 @@ namespace FastPCB.Data.Configurations
                 .HasMaxLength(500)
                 .HasColumnType("varchar(500)");
 
+            builder.Property(u => u.Role)
+                .IsRequired()
+                .HasConversion<int>()
+                .HasColumnType("int")
+                .HasDefaultValue(UserRole.User);
+
             builder.Property(u => u.CreatedAt)
                 .IsRequired()
                 .HasColumnType("datetime")
@@ -52,6 +58,9 @@ namespace FastPCB.Data.Configurations
             builder.HasIndex(u => u.Email)
                 .IsUnique()
                 .HasDatabaseName("IX_Users_Email_Unique");
+
+            builder.HasIndex(u => u.Role)
+                .HasDatabaseName("IX_Users_Role");
 
             // Table configuration
             builder.ToTable("Users");
