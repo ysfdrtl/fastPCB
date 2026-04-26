@@ -77,6 +77,56 @@ button, input, textarea, select { font: inherit; }
   padding: 2rem 0 4rem;
 }
 
+.site-footer {
+  border-top: 1px solid var(--line);
+  background: rgba(245, 239, 226, 0.72);
+  backdrop-filter: blur(14px);
+}
+
+.footer-inner {
+  width: min(1200px, calc(100% - 2rem));
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) auto auto;
+  gap: 1.5rem;
+  align-items: center;
+  padding: 1.5rem 0;
+}
+
+.footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.footer-brand strong {
+  font-family: "Space Grotesk", sans-serif;
+}
+
+.footer-brand p {
+  max-width: 48ch;
+  margin: 0.25rem 0 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.footer-links,
+.footer-meta {
+  display: flex;
+  gap: 0.9rem;
+  flex-wrap: wrap;
+  align-items: center;
+  color: var(--muted);
+}
+
+.footer-links a:hover {
+  color: var(--accent-deep);
+}
+
+.footer-meta {
+  justify-content: end;
+}
+
 .page-layout, .detail-layout {
   display: grid;
   gap: 1.5rem;
@@ -325,4 +375,12 @@ button, input, textarea, select { font: inherit; }
   .detail-layout, .card-grid, .admin-stat-grid, .admin-row { grid-template-columns: 1fr; }
   .topbar { padding: 1rem; flex-wrap: wrap; }
   .page-frame { width: min(100% - 1rem, 1200px); }
+  .footer-inner {
+    width: min(100% - 1rem, 1200px);
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+  .footer-meta {
+    justify-content: start;
+  }
 }

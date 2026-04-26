@@ -41,6 +41,30 @@ export function Shell({ children }: PropsWithChildren) {
       </header>
 
       <main className="page-frame">{children}</main>
+
+      <footer className="site-footer">
+        <div className="footer-inner">
+          <div className="footer-brand">
+            <span className="brand-mark">FP</span>
+            <div>
+              <strong>FastPCB</strong>
+              <p>PCB projelerini paylasmak, kesfetmek ve toplulukla gelistirmek icin sade bir alan.</p>
+            </div>
+          </div>
+
+          <nav className="footer-links" aria-label="Footer">
+            <Link to="/">Kesfet</Link>
+            <Link to="/upload">Yukle</Link>
+            {user ? <Link to="/profile">Profil</Link> : <Link to="/login">Giris</Link>}
+            {user?.role === "Admin" ? <Link to="/admin">Admin</Link> : null}
+          </nav>
+
+          <div className="footer-meta">
+            <span>FastPCB</span>
+            <span>{new Date().getFullYear()}</span>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
