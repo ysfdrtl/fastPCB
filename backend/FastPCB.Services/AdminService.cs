@@ -1,6 +1,9 @@
 using FastPCB.Data;
 using FastPCB.Models;
+using FastPCB.Services.Infrastructure.Cache;
+using FastPCB.Services.Infrastructure.Kafka;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace FastPCB.Services
 {
@@ -22,16 +25,27 @@ namespace FastPCB.Services
     {
         private readonly FastPCBContext _context;
         private readonly IProjectFileStorage _projectFileStorage;
+        private readonly ICacheService _cacheService;
+        private readonly IKafkaProducer _kafkaProducer;
+        private readonly KafkaOptions _kafkaOptions;
 
-        public AdminService(FastPCBContext context, IProjectFileStorage projectFileStorage)
+        public AdminService(
+            FastPCBContext context,
+            IProjectFileStorage projectFileStorage,
+            ICacheService cacheService,
+            IKafkaProducer kafkaProducer,
+            IOptions<KafkaOptions> kafkaOptions)
         {
             _context = context;
             _projectFileStorage = projectFileStorage;
+            _cacheService = cacheService;
+            _kafkaProducer = kafkaProducer;
+            _kafkaOptions = kafkaOptions.Value;
         }
 
         public async Task<AdminDashboardStats> GetDashboardStatsAsync()
         {
-            return new AdminDashboardStats
+            return await _cacheService.GetOrCreateAsync(CacheKeys.AdminDashboard(), async () => new AdminDashboardStats
             {
                 TotalUsers = await _context.Users.CountAsync(),
                 AdminUsers = await _context.Users.CountAsync(u => u.Role == UserRole.Admin),
@@ -45,7 +59,7 @@ namespace FastPCB.Services
                 InProgressReports = await _context.Reports.CountAsync(r => r.Status == TicketStatus.InProgress),
                 ResolvedReports = await _context.Reports.CountAsync(r => r.Status == TicketStatus.Resolved),
                 ClosedReports = await _context.Reports.CountAsync(r => r.Status == TicketStatus.Closed)
-            };
+            });
         }
 
         public async Task<PagedResult<User>> GetUsersAsync(AdminUserQueryOptions? query = null)
@@ -101,9 +115,16 @@ namespace FastPCB.Services
                 throw new AdminNotFoundException("Rolu guncellenecek kullanici bulunamadi.");
             }
 
+            var oldRole = user.Role;
             user.Role = role;
             user.UpdatedAt = DateTime.UtcNow;
             await _context.SaveChangesAsync();
+            await _cacheService.RemoveByPrefixAsync(CacheKeys.AdminDashboardPrefix);
+
+            await _kafkaProducer.PublishAsync(
+                _kafkaOptions.Topics.Users,
+                user.Id.ToString(),
+                new UserRoleChanged(user.Id, oldRole, user.Role, user.UpdatedAt));
 
             return await GetUserAsync(user.Id);
         }
@@ -123,6 +144,7 @@ namespace FastPCB.Services
 
             _context.Users.Remove(user);
             await _context.SaveChangesAsync();
+            await _cacheService.RemoveByPrefixAsync(CacheKeys.AdminDashboardPrefix);
 
             foreach (var projectId in projectIds)
             {
@@ -179,6 +201,8 @@ namespace FastPCB.Services
             project.Status = status;
             project.UpdatedAt = DateTime.UtcNow;
             await _context.SaveChangesAsync();
+            await _cacheService.RemoveByPrefixAsync(CacheKeys.ProjectPrefix);
+            await _cacheService.RemoveByPrefixAsync(CacheKeys.AdminDashboardPrefix);
 
             return await _context.Projects
                 .Include(p => p.User)
@@ -197,6 +221,8 @@ namespace FastPCB.Services
             _context.Projects.Remove(project);
             await _context.SaveChangesAsync();
             await _projectFileStorage.DeleteProjectDirectoryAsync(projectId);
+            await _cacheService.RemoveByPrefixAsync(CacheKeys.ProjectPrefix);
+            await _cacheService.RemoveByPrefixAsync(CacheKeys.AdminDashboardPrefix);
         }
 
         public async Task<PagedResult<Ticket>> GetReportsAsync(AdminReportQueryOptions? query = null)
@@ -243,16 +269,25 @@ namespace FastPCB.Services
                 throw new AdminNotFoundException("Guncellenecek rapor bulunamadi.");
             }
 
+            var oldStatus = report.Status;
             report.Status = status;
             report.Response = NormalizeResponse(response);
             report.UpdatedAt = DateTime.UtcNow;
             await _context.SaveChangesAsync();
+            await _cacheService.RemoveByPrefixAsync(CacheKeys.AdminDashboardPrefix);
 
-            return await _context.Reports
+            var updatedReport = await _context.Reports
                 .Include(r => r.Project)
                 .Include(r => r.User)
                 .AsNoTracking()
                 .FirstAsync(r => r.Id == report.Id);
+
+            await _kafkaProducer.PublishAsync(
+                _kafkaOptions.Topics.Reports,
+                updatedReport.Id.ToString(),
+                new ReportStatusChanged(updatedReport.Id, oldStatus, updatedReport.Status, updatedReport.UpdatedAt));
+
+            return updatedReport;
         }
 
         private static string NormalizeResponse(string? response)

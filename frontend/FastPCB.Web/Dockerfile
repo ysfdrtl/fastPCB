@@ -14,13 +14,11 @@ COPY . ./
 RUN npm run build
 
 # Runtime stage
-FROM node:20-alpine AS runtime
-WORKDIR /app
+FROM nginx:1.27-alpine AS runtime
 
-COPY --from=build /app/dist ./dist
-COPY server.cjs ./server.cjs
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=build /app/dist /usr/share/nginx/html
 
-# Railway injects PORT at runtime; 8080 is the local/container fallback.
-EXPOSE 8080
+EXPOSE 80
 
-ENTRYPOINT ["node", "server.cjs"]
+CMD ["nginx", "-g", "daemon off;"]

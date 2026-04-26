@@ -3,6 +3,9 @@ using FastPCB.API.Services;
 using FastPCB.Data.Configuration;
 using FastPCB.Data.Extensions;
 using FastPCB.Services;
+using FastPCB.Services.Infrastructure.Cache;
+using FastPCB.Services.Infrastructure.Health;
+using FastPCB.Services.Infrastructure.Kafka;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
@@ -75,6 +78,14 @@ builder.Services.AddAuthorization();
 // Database configuration
 var connectionString = MySqlConnectionStringResolver.Resolve(builder.Configuration);
 builder.Services.AddFastPCBData(connectionString);
+
+// Kafka and Redis are optional infrastructure services; when unavailable, business flows continue and failures are logged.
+builder.Services.Configure<KafkaOptions>(builder.Configuration.GetSection("Kafka"));
+builder.Services.Configure<RedisOptions>(builder.Configuration.GetSection("Redis"));
+builder.Services.AddSingleton<IKafkaProducer, KafkaProducer>();
+builder.Services.AddSingleton<ICacheService, RedisCacheService>();
+builder.Services.AddHealthChecks()
+    .AddCheck<RedisHealthCheck>("redis");
 
 // Service registration
 builder.Services.AddScoped<IAuthService, AuthService>();
@@ -158,6 +169,7 @@ app.UseStaticFiles(new StaticFileOptions
 app.UseCors("AllowAll");
 app.UseAuthentication();
 app.UseAuthorization();
+app.MapHealthChecks("/health");
 app.MapControllers();
 
 app.Run();

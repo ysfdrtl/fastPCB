@@ -17,3 +17,10 @@ Bu klasor, FastPCB platformunun sunucu tarafini barindirir. Backend yapisi katma
 4. Kullanilan entity siniflari `FastPCB.Models` icinden gelir.
 
 Bu ayirim sayesinde backend daha okunabilir, test edilebilir ve sunum sirasinda daha rahat anlatilabilir hale gelir.
+
+## Altyapi Servisleri
+
+- Kafka producer ve event modelleri `FastPCB.Services/Infrastructure/Kafka` altindadir. Kafka kapaliysa veya broker'a ulasilamazsa is akisi devam eder, hata loglanir.
+- Redis cache servisleri `FastPCB.Services/Infrastructure/Cache` altindadir. Redis kapaliysa cache no-op gibi davranir ve veri dogrudan veritabanindan okunur.
+- Redis health check `FastPCB.Services/Infrastructure/Health` altindadir ve API'de `/health` endpointine baglanir.
+- Admin controller `UserRole.Admin` rolu ile korunur; admin istatistik cache'i rol/rapor/proje durum degisimlerinde temizlenir.

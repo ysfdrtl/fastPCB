@@ -1,143 +1,93 @@
-# FastPCB Yapilacaklar
+# Yapilacaklar
 
-Bu dosya, projenin yeni kapsamına gore guncellenmistir.
-Proje artik PCB uretim ve odeme sistemi degil; kullanicilarin PCB dosyalarini yukleyip paylastigi bir platform olarak devam edecektir.
+Bu dosya projeye eklenecek yeni teknolojiler icin takip edilecek teknik isleri listeler.
 
-## Mevcut Durum Ozeti
+## Kafka
 
-- Backend katmanli yapi hazir.
-- Authentication akisi temel seviyede calisiyor.
-- Veritabani, migration ve JWT altyapisi mevcut.
-- Dokumantasyon yeni proje yonune gore guncellendi.
-- API yuzeyi `projects` odakli hale getirildi.
-- Domain isimleri `Project` etrafinda toplandi.
-- Frontend iskeleti kuruldu.
+- [x] Kafka'nin projede hangi olaylar icin kullanilacagini netlestir.
+  - Ornek: proje yuklendi, proje raporlandi, rapor durumu degisti, kullanici admin yapildi.
+- [x] Backend tarafinda Kafka producer servisi ekle.
+- [x] Event modellerini tanimla.
+  - `ProjectCreated`
+  - `ProjectReported`
+  - `ReportStatusChanged`
+  - `UserRoleChanged`
+- [x] Kafka topic isimlerini standartlastir.
+  - `fastpcb.projects`
+  - `fastpcb.reports`
+  - `fastpcb.users`
+- [x] Kritik islemlerden sonra event publish et.
+- [x] Kafka baglanti ayarlarini `.env` ve appsettings uzerinden okunabilir yap.
+- [x] Local gelistirme icin Docker Compose'a Kafka ve Zookeeper/KRaft servisi ekle.
+- [x] Kafka kullanilamiyorsa uygulamanin tamamen dusmemesi icin hata yonetimi ekle.
+- [x] Producer icin temel unit/integration testleri yaz.
+- [x] Kafka kurulum ve kullanim adimlarini README'ye ekle.
 
-## Yeni Oncelik Sirasi
+## Redis
 
-### 1. API yuzeyinde siparis dilini proje diline cevir
+- [x] Redis'in projede hangi amaclarla kullanilacagini belirle.
+  - Ornek: cache, rate limit, session/token blacklist, populer projeler.
+- [x] Backend tarafina Redis connection ayari ekle.
+- [x] Redis client paketini projeye ekle.
+- [x] Cache servisi icin ortak interface olustur.
+- [x] Sik okunan veriler icin cache stratejisi tasarla.
+  - Proje listeleme
+  - Proje detay
+  - Admin dashboard istatistikleri
+- [x] Cache invalidation kurallarini belirle.
+  - Proje eklenince/guncellenince/silinince ilgili cache temizlenecek.
+  - Rapor veya kullanici rolu degisince admin dashboard cache temizlenecek.
+- [x] Redis baglantisi yoksa uygulamanin cache olmadan calismaya devam etmesini sagla.
+- [x] Local gelistirme icin Docker Compose'a Redis servisi ekle.
+- [x] Redis icin health check ekle.
+- [x] Redis kullanimini README'ye ekle.
 
-Durum:
-- Tamamlandi.
+## Docker
 
-Yapilanlar:
-- `api/projects` endpointleri eklendi
-- Swagger tarafinda ana kaynak `projects` oldu
-- `ProjectController` aktif hale getirildi
+- [x] Mevcut backend ve frontend Dockerfile'larini kontrol et.
+- [x] Backend Dockerfile'ini production calisma sekline gore sadelestir.
+- [x] Frontend Dockerfile'ini production build ve static servis icin duzenle.
+- [x] Proje kokune `docker-compose.yml` ekle.
+- [x] Docker Compose servislerini tanimla.
+  - Backend API
+  - Frontend
+  - MySQL
+  - Redis
+  - Kafka
+- [x] Servisler arasi network ayarlarini yap.
+- [x] Ortam degiskenlerini `.env` uzerinden compose'a bagla.
+- [x] Database migration calistirma akisini belirle.
+  - Manuel komut
+  - Container startup
+  - CI/CD adimi
+- [x] Upload dosyalari icin volume stratejisi belirle.
+- [x] Docker health check'leri ekle.
+- [x] Docker ile local calistirma adimlarini README'ye ekle.
 
-### 2. Domain modelini yeniden adlandir
+## CI/CD
 
-Durum:
-- Tamamlandi.
+- [x] Kullanilacak CI/CD platformunu netlestir.
+  - GitHub Actions onerilir.
+- [x] Pull request icin build pipeline ekle.
+- [x] Backend icin restore ve build adimlari ekle.
+- [x] Frontend icin install ve build adimlari ekle.
+- [x] Test komutlari eklendiginde pipeline'a test adimi koy.
+- [x] Migration dosyalarinin build sirasinda dogrulanmasini sagla.
+- [x] Docker image build adimi ekle.
+- [x] Main branch'e merge sonrasi deploy akisini tasarla.
+- [x] Production secret'larini repo disinda sakla.
+  - Railway variables
+  - GitHub Actions secrets
+- [x] CI/CD icin gerekli environment variable listesini dokumante et.
+- [x] Basarisiz build/deploy durumunda log takibi ve rollback planini yaz.
 
-Yapilanlar:
-- `Project` modeli eklendi
-- `ProjectService` aktif hale getirildi
-- `ProjectConfiguration` eklendi
-- `FastPCBContext` artik `DbSet<Project>` kullaniyor
-- Veritabani haritalamasi yeni `Projects` tablosuna gore hazirlandi
+## Genel
 
-Not:
-- Migration klasorundeki eski dosyalar tarihsel olarak eski isimler tasiyor olabilir
-- Yeni migration olusturuldugunda veritabani bu yeni modele gore guncellenecek
-
-### 3. Proje yukleme akisini tamamla
-
-Durum:
-- Baslandi.
-
-Dosyalar:
-- `backend/FastPCB.API/Controllers/ProjectController.cs`
-- `backend/FastPCB.Services/` altinda dosya yukleme servisi
-- `backend/FastPCB.API/Program.cs`
-
-Yapilacaklar:
-- PCB dosyasi, gorsel veya zip yukleme
-- dosya yolu kaydetme
-- temel dosya dogrulama
-
-Bu tur yapilanlar:
-- `POST /api/projects/{projectId}/files` endpointi eklendi
-- dosyalar `uploads/projects/{projectId}` altina kaydediliyor
-- uzanti ve maksimum boyut kontrolu eklendi
-- yuklenen dosyanin yolu `Project.FilePath` alanina yaziliyor
-
-### 4. Proje listeleme ve detay sayfasi API'lerini netlestir
-
-Durum:
-- Baslandi.
-
-Dosyalar:
-- `backend/FastPCB.API/Controllers/ProjectController.cs`
-- `backend/FastPCB.Services/ProjectService.cs`
-
-Yapilacaklar:
-- proje listeleme
-- proje detay getirme
-- kullaniciya ait projeleri getirme
-- arama ve filtreleme icin uygun query parametreleri ekleme
-
-Bu tur yapilanlar:
-- `GET /api/users/{userId}/projects` endpointi eklendi
-- `GET /api/projects` icin `search`, `status`, `hasFile`, `userId` filtreleri eklendi
-- proje cevaplarina temel sahip bilgisi eklendi
-- `GET /api/projects` icin sayfalama eklendi
-- teknik detaylar `description` yerine ayri alanlarda tutuluyor
-
-### 5. Etkilesim katmanini ekle
-
-Durum:
-- Tamamlandi.
-
-Dosyalar:
-- yeni controller ve model dosyalari
-
-Yapilacaklar:
-- yorum sistemi
-- begenme veya kaydetme
-- raporlama veya moderasyon
-
-Bu tur yapilanlar:
-- `Comment` modeli eklendi
-- `GET /api/projects/{projectId}/comments` endpointi eklendi
-- `POST /api/projects/{projectId}/comments` endpointi eklendi
-- yorum servis katmani ve EF konfigurasyonu baglandi
-- `DELETE /api/comments/{commentId}` endpointi eklendi
-- `ProjectLike` modeli eklendi
-- `POST /api/projects/{projectId}/like` endpointi eklendi
-- `DELETE /api/projects/{projectId}/like` endpointi eklendi
-- `GET /api/likes/me` endpointi eklendi
-- `POST /api/projects/{projectId}/report` endpointi eklendi
-- `GET /api/reports/me` endpointi eklendi
-- raporlama servis katmani ve proje iliskisi baglandi
-
-### 6. Frontend projesini baslat
-
-Durum:
-- Baslandi.
-
-Dosyalar:
-- `frontend/FastPCB.Web/`
-
-Yapilacaklar:
-- giris ve kayit
-- proje listeleme
-- proje detay
-- proje yukleme
-- profil sayfasi
-
-Bu tur yapilanlar:
-- React + Vite + TypeScript frontend iskeleti kuruldu
-- giris, kayit, kesfet, proje detay, yukleme ve profil sayfalari eklendi
-- auth durumu local storage ile baglandi
-- backend endpointlerine baglanan temel API katmani eklendi
-
-## Hizli Kontrol Listesi
-
-- [x] Dokumantasyon yeni konsepte gore guncellendi
-- [x] Auth temeli var
-- [x] `api/projects` endpointleri eklendi
-- [x] Domain isimleri yeni konsepte cevrildi
-- [x] Dosya yukleme temeli var
-- [x] Yorum / etkilesim sistemi eklendi
-- [x] Frontend baslatildi
+- [x] `.env.example` dosyasi ekle ve gercek sifreleri koyma.
+- [x] README'yi yeni servisler ve calistirma komutlariyla guncelle.
+- [x] Gelistirme, staging ve production ortamlarini ayir.
+- [x] Yeni servisler icin temel monitoring/logging ihtiyaclarini belirle.
+- [x] Guvenlik kontrolu yap.
+  - Secret'lar git'e girmeyecek.
+  - Admin endpointleri sadece admin role ile calisacak.
+  - Production connection string'leri appsettings icinde tutulmayacak.

@@ -1,6 +1,9 @@
 using FastPCB.Data;
 using FastPCB.Models;
+using FastPCB.Services.Infrastructure.Cache;
+using FastPCB.Services.Infrastructure.Kafka;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace FastPCB.Services
 {
@@ -19,11 +22,22 @@ namespace FastPCB.Services
     {
         private readonly FastPCBContext _context;
         private readonly IProjectFileStorage _projectFileStorage;
+        private readonly ICacheService _cacheService;
+        private readonly IKafkaProducer _kafkaProducer;
+        private readonly KafkaOptions _kafkaOptions;
 
-        public ProjectService(FastPCBContext context, IProjectFileStorage projectFileStorage)
+        public ProjectService(
+            FastPCBContext context,
+            IProjectFileStorage projectFileStorage,
+            ICacheService cacheService,
+            IKafkaProducer kafkaProducer,
+            IOptions<KafkaOptions> kafkaOptions)
         {
             _context = context;
             _projectFileStorage = projectFileStorage;
+            _cacheService = cacheService;
+            _kafkaProducer = kafkaProducer;
+            _kafkaOptions = kafkaOptions.Value;
         }
 
         // Yeni proje kaydini olusturur ve ilk taslak durumunda veritabanina yazar.
@@ -56,16 +70,25 @@ namespace FastPCB.Services
             _context.Projects.Add(project);
             await _context.SaveChangesAsync();
 
+            await _cacheService.RemoveByPrefixAsync(CacheKeys.ProjectPrefix);
+            await _cacheService.RemoveByPrefixAsync(CacheKeys.AdminDashboardPrefix);
+            await _kafkaProducer.PublishAsync(
+                _kafkaOptions.Topics.Projects,
+                project.Id.ToString(),
+                new ProjectCreated(project.Id, project.UserId, project.Title, project.CreatedAt));
+
             return await GetProjectAsync(project.Id);
         }
 
         // Tek bir projeyi sahibiyle birlikte getirir.
         public async Task<Project> GetProjectAsync(int projectId)
         {
-            var project = await _context.Projects
-                .Include(p => p.User)
-                .AsNoTracking()
-                .FirstOrDefaultAsync(p => p.Id == projectId);
+            var project = await _cacheService.GetOrCreateAsync(
+                CacheKeys.ProjectDetail(projectId),
+                async () => await _context.Projects
+                    .Include(p => p.User)
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(p => p.Id == projectId));
 
             if (project is null)
             {
@@ -81,51 +104,55 @@ namespace FastPCB.Services
             query ??= new ProjectQueryOptions();
             NormalizeQuery(query);
 
-            var projectsQuery = _context.Projects
-                .Include(p => p.User)
-                .AsNoTracking()
-                .AsQueryable();
-
-            if (query.UserId.HasValue)
+            var cacheKey = CacheKeys.ProjectList(BuildProjectQueryFingerprint(query));
+            return await _cacheService.GetOrCreateAsync(cacheKey, async () =>
             {
-                projectsQuery = projectsQuery.Where(p => p.UserId == query.UserId.Value);
-            }
+                var projectsQuery = _context.Projects
+                    .Include(p => p.User)
+                    .AsNoTracking()
+                    .AsQueryable();
 
-            if (!string.IsNullOrWhiteSpace(query.Search))
-            {
-                var normalizedSearch = query.Search.Trim();
-                projectsQuery = projectsQuery.Where(p =>
-                    EF.Functions.Like(p.Title, $"%{normalizedSearch}%") ||
-                    EF.Functions.Like(p.Description, $"%{normalizedSearch}%") ||
-                    (p.Material != null && EF.Functions.Like(p.Material, $"%{normalizedSearch}%")));
-            }
+                if (query.UserId.HasValue)
+                {
+                    projectsQuery = projectsQuery.Where(p => p.UserId == query.UserId.Value);
+                }
 
-            if (query.Status.HasValue)
-            {
-                projectsQuery = projectsQuery.Where(p => p.Status == query.Status.Value);
-            }
+                if (!string.IsNullOrWhiteSpace(query.Search))
+                {
+                    var normalizedSearch = query.Search.Trim();
+                    projectsQuery = projectsQuery.Where(p =>
+                        EF.Functions.Like(p.Title, $"%{normalizedSearch}%") ||
+                        EF.Functions.Like(p.Description, $"%{normalizedSearch}%") ||
+                        (p.Material != null && EF.Functions.Like(p.Material, $"%{normalizedSearch}%")));
+                }
 
-            if (query.HasFile.HasValue)
-            {
-                projectsQuery = query.HasFile.Value
-                    ? projectsQuery.Where(p => !string.IsNullOrWhiteSpace(p.FilePath))
-                    : projectsQuery.Where(p => string.IsNullOrWhiteSpace(p.FilePath));
-            }
+                if (query.Status.HasValue)
+                {
+                    projectsQuery = projectsQuery.Where(p => p.Status == query.Status.Value);
+                }
 
-            var totalCount = await projectsQuery.CountAsync();
-            var items = await projectsQuery
-                .OrderByDescending(p => p.CreatedAt)
-                .Skip((query.Page - 1) * query.PageSize)
-                .Take(query.PageSize)
-                .ToListAsync();
+                if (query.HasFile.HasValue)
+                {
+                    projectsQuery = query.HasFile.Value
+                        ? projectsQuery.Where(p => !string.IsNullOrWhiteSpace(p.FilePath))
+                        : projectsQuery.Where(p => string.IsNullOrWhiteSpace(p.FilePath));
+                }
 
-            return new PagedResult<Project>
-            {
-                Items = items,
-                TotalCount = totalCount,
-                Page = query.Page,
-                PageSize = query.PageSize
-            };
+                var totalCount = await projectsQuery.CountAsync();
+                var items = await projectsQuery
+                    .OrderByDescending(p => p.CreatedAt)
+                    .Skip((query.Page - 1) * query.PageSize)
+                    .Take(query.PageSize)
+                    .ToListAsync();
+
+                return new PagedResult<Project>
+                {
+                    Items = items,
+                    TotalCount = totalCount,
+                    Page = query.Page,
+                    PageSize = query.PageSize
+                };
+            });
         }
 
         // Belirli bir kullaniciya ait tum projeleri listeler.
@@ -163,6 +190,7 @@ namespace FastPCB.Services
             project.UpdatedAt = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
+            await _cacheService.RemoveByPrefixAsync(CacheKeys.ProjectPrefix);
 
             return await GetProjectAsync(project.Id);
         }
@@ -197,6 +225,7 @@ namespace FastPCB.Services
             project.UpdatedAt = DateTime.UtcNow;
 
             await _context.SaveChangesAsync(cancellationToken);
+            await _cacheService.RemoveByPrefixAsync(CacheKeys.ProjectPrefix, cancellationToken);
 
             return await GetProjectAsync(project.Id);
         }
@@ -213,6 +242,8 @@ namespace FastPCB.Services
             _context.Projects.Remove(project);
             await _context.SaveChangesAsync();
             await _projectFileStorage.DeleteProjectDirectoryAsync(projectId);
+            await _cacheService.RemoveByPrefixAsync(CacheKeys.ProjectPrefix);
+            await _cacheService.RemoveByPrefixAsync(CacheKeys.AdminDashboardPrefix);
             return true;
         }
 
@@ -263,6 +294,15 @@ namespace FastPCB.Services
             {
                 query.PageSize = 50;
             }
+        }
+
+        private static string BuildProjectQueryFingerprint(ProjectQueryOptions query)
+        {
+            var search = string.IsNullOrWhiteSpace(query.Search)
+                ? "none"
+                : Uri.EscapeDataString(query.Search.Trim().ToLowerInvariant());
+
+            return $"user-{query.UserId?.ToString() ?? "all"}:search-{search}:status-{query.Status?.ToString() ?? "all"}:file-{query.HasFile?.ToString() ?? "all"}:page-{query.Page}:size-{query.PageSize}";
         }
     }
 

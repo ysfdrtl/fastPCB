@@ -1,6 +1,9 @@
 using FastPCB.Data;
 using FastPCB.Models;
+using FastPCB.Services.Infrastructure.Cache;
+using FastPCB.Services.Infrastructure.Kafka;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace FastPCB.Services
 {
@@ -13,10 +16,20 @@ namespace FastPCB.Services
     public class ReportService : IReportService
     {
         private readonly FastPCBContext _context;
+        private readonly ICacheService _cacheService;
+        private readonly IKafkaProducer _kafkaProducer;
+        private readonly KafkaOptions _kafkaOptions;
 
-        public ReportService(FastPCBContext context)
+        public ReportService(
+            FastPCBContext context,
+            ICacheService cacheService,
+            IKafkaProducer kafkaProducer,
+            IOptions<KafkaOptions> kafkaOptions)
         {
             _context = context;
+            _cacheService = cacheService;
+            _kafkaProducer = kafkaProducer;
+            _kafkaOptions = kafkaOptions.Value;
         }
 
         // Kullanici adina proje raporu olusturur ve ayni proje icin tekrar acik rapor acilmasini engeller.
@@ -69,12 +82,25 @@ namespace FastPCB.Services
 
             _context.Reports.Add(report);
             await _context.SaveChangesAsync();
+            await _cacheService.RemoveByPrefixAsync(CacheKeys.AdminDashboardPrefix);
 
-            return await _context.Reports
+            var createdReport = await _context.Reports
                 .Include(r => r.Project)
                 .Include(r => r.User)
                 .AsNoTracking()
                 .FirstAsync(r => r.Id == report.Id);
+
+            await _kafkaProducer.PublishAsync(
+                _kafkaOptions.Topics.Reports,
+                createdReport.Id.ToString(),
+                new ProjectReported(
+                    createdReport.Id,
+                    createdReport.ProjectId,
+                    createdReport.UserId,
+                    createdReport.Title,
+                    createdReport.CreatedAt));
+
+            return createdReport;
         }
 
         // Giris yapan kullanicinin gonderdigi raporlari proje bilgileriyle birlikte listeler.
