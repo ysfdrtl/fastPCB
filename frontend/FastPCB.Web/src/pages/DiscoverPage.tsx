@@ -1,6 +1,5 @@
 import { startTransition, useDeferredValue, useEffect, useState } from "react";
 import { ProjectCard } from "../components/ProjectCard";
-import { demoProjects } from "../demo-data";
 import { api } from "../lib/api";
 import type { Project } from "../types";
 
@@ -123,19 +122,6 @@ export function DiscoverPage() {
           </div>
         </>
       ) : null}
-
-      <section className="stack-section">
-        <div className="section-heading">
-          <span className="eyebrow">Ornek vitrin</span>
-          <h2>Sayfayi dolu gosteren demo projeler</h2>
-          <p className="section-copy">
-            Gercek icerikler arttikca bu alan dogal olarak kesfet akisina karisacak. Simdilik arayuzun bos hissettirmemesi icin ornek paylasimlar ekledim.
-          </p>
-        </div>
-        <div className="card-grid">
-          {demoProjects.map((project) => <ProjectCard key={project.id} project={project} />)}
-        </div>
-      </section>
     </section>
   );
 }
