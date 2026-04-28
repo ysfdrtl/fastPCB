@@ -1,0 +1,21 @@
+C:\Users\yusuf\projeler\fastPCB\fastPCB\mobile\node_modules\@expo\cli\build\src\utils\errors.js:130
+    throw error;
+    ^
+
+Error: ENOENT: no such file or directory, watch 'C:\Users\yusuf\projeler\fastPCB\fastPCB\mobile\node_modules\react-native-screens\android\src\main\java\com\swmansion\rnscreens\safearea'
+    at FSWatcher.<computed> (node:internal/fs/watchers:316:19)
+    at Object.watch (node:fs:2537:36)
+    at FallbackWatcher.#watchdir (C:\Users\yusuf\projeler\fastPCB\fastPCB\mobile\node_modules\metro-file-map\src\watchers\FallbackWatcher.js:133:33)
+    at C:\Users\yusuf\projeler\fastPCB\fastPCB\mobile\node_modules\metro-file-map\src\watchers\FallbackWatcher.js:233:31
+    at Walker.<anonymous> (C:\Users\yusuf\projeler\fastPCB\fastPCB\mobile\node_modules\metro-file-map\src\watchers\FallbackWatcher.js:378:5)
+    at Walker.emit (node:events:508:28)
+    at C:\Users\yusuf\projeler\fastPCB\fastPCB\mobile\node_modules\walker\lib\walker.js:69:16
+    at FSReqCallback.oncomplete (node:fs:185:23) {
+  errno: -4058,
+  syscall: 'watch',
+  code: 'ENOENT',
+  path: 'C:\\Users\\yusuf\\projeler\\fastPCB\\fastPCB\\mobile\\node_modules\\react-native-screens\\android\\src\\main\\java\\com\\swmansion\\rnscreens\\safearea',
+  filename: 'C:\\Users\\yusuf\\projeler\\fastPCB\\fastPCB\\mobile\\node_modules\\react-native-screens\\android\\src\\main\\java\\com\\swmansion\\rnscreens\\safearea'
+}
+
+Node.js v24.14.1

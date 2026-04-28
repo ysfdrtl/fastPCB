@@ -1,0 +1,29 @@
+{
+  "expo": {
+    "name": "FastPCB",
+    "slug": "fastpcb-mobile",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "scheme": "fastpcb",
+    "userInterfaceStyle": "light",
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#f6f7fb"
+      }
+    },
+    "web": {
+      "bundler": "metro"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store",
+      "expo-document-picker"
+    ]
+  }
+}
