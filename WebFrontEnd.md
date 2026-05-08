@@ -1,6 +1,6 @@
 # Web Frontend Gorev Dagilimi
 
-**Web Frontend Adresi:** `http://localhost:5173`
+**Web Frontend Adresi:** `https://fast-pcb.vercel.app/`
 
 Bu dokumanda, web uygulamasinin kullanici arayuzu ve deneyimi ile ilgili gorevler listelenmektedir.
 

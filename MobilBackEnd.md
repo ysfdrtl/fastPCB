@@ -1,6 +1,6 @@
 # Mobil Backend (REST API Baglantisi) Gorev Dagilimi
 
-**REST API Adresi:** `http://localhost:5000/api`
+**REST API Adresi:** `https://fastpcb-backend-production.up.railway.app`
 
 Bu dokumanda, mobil uygulamanin REST API ile iletisimini saglayan entegrasyon gorevleri listelenmektedir. Mevcut asamada mobil istemci gelistirilmemistir; belge planlama ve is bolumu icin hazirdir.
 

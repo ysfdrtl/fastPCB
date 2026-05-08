@@ -1,6 +1,6 @@
 # REST API Gorev Dagilimi
 
-**REST API Adresi:** `http://localhost:5000/swagger`
+**REST API Swagger Adresi:** `https://fastpcb-backend-production.up.railway.app/swagger/index.html`
 
 Bu dokumanda, proje ekibindeki her uyenin gelistirmekten sorumlu oldugu REST API metotlari listelenmektedir.
 

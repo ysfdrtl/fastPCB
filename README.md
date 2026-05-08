@@ -1,10 +1,10 @@
 # FastPCB
 
+![Urun Tanitim Gorseli](Product.png)
 ---
 
 ## Proje Hakkinda
 
-![Urun Tanitim Gorseli](Product.png)
 
 **Proje Tanimi:**
 > FastPCB, kullanicilarin PCB tasarimlarini yukleyip toplulukla paylastigi bir platformdur. Sistem uzerinden kullanicilar hesap olusturabilir, proje ekleyebilir, teknik detay girebilir, tasarim dosyalarini yukleyebilir, diger projeleri kesfedebilir, yorum yapabilir, begeni birakabilir ve uygunsuz icerikleri raporlayabilir. Projenin amaci PCB toplulugu icin sade, anlasilir ve etkilesimli bir paylasim ortami sunmaktir.
@@ -19,15 +19,15 @@
 
 ## Proje Linkleri
 
-- **REST API Adresi:** `http://localhost:5000/swagger`
-- **Web Frontend Adresi:** `http://localhost:5173`
+- **REST API Swagger Adresi:** `https://fastpcb-backend-production.up.railway.app/swagger/index.html`
+- **Web Frontend Adresi:** `https://fast-pcb.vercel.app/`
 
 ---
 
 ## Proje Ekibi
 
 **Grup Adi:**
-> FastPCB
+> kodlayıcı
 
 **Ekip Uyeleri:**
 - Yusuf Doruatli
@@ -84,15 +84,18 @@ Docker Compose su servisleri kaldirir: backend API, frontend, MySQL, Redis ve KR
 
 ```bash
 cd fastPCB
-copy .env.example .env
+cp .env.example .env
 docker compose up --build
 ```
 
 Adresler:
 
-- Backend Swagger: `http://localhost:5000/swagger`
-- Backend health: `http://localhost:5000/health`
-- Frontend: `http://localhost:3000`
+- Production Swagger: `https://fastpcb-backend-production.up.railway.app/swagger/index.html`
+- Production Frontend: `https://fast-pcb.vercel.app/`
+- Local Docker Backend Swagger: `http://localhost:5000/swagger`
+- Local Docker Backend health: `http://localhost:5000/health`
+- Local Docker Frontend: `http://localhost:3000`
+- Local Vite Frontend: `http://localhost:5173`
 - Kafka local dis port: `localhost:9094`
 - Redis local port: `localhost:6379`
 
@@ -141,7 +144,7 @@ GitHub Actions workflow dosyasi `.github/workflows/ci.yml` altindadir. Pull requ
 - Frontend `npm ci` ve `npm run build`
 - Backend ve frontend Docker image build kontrolu
 
-Main branch sonrasi deploy icin workflow'da temel handoff job'u vardir. Production deployment'ta registry push, platform deploy ve migration adimi kullanilan ortama gore eklenmelidir.
+`main` branch push sonrasinda workflow icinde bir handoff/place-holder job calisir. Production deployment'ta registry push, platform deploy ve migration adimi kullanilan ortama gore bu job uzerine eklenmelidir.
 
 Rollback plani:
 

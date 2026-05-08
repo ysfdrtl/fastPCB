@@ -24,11 +24,14 @@ Tum gereksinimler belirlendikten sonra hangi API metoduna karsilik geldigi ve ki
 3. **Proje Olusturma** (Yusuf Doruatli)
 4. **Proje Teknik Bilgisi Girme** (Yusuf Doruatli)
 5. **Proje Dosyasi Yukleme** (Yusuf Doruatli)
-6. **Proje Listeleme** (Yusuf Doruatli)
+6. **Proje Listeleme ve Filtreleme** (Yusuf Doruatli)
 7. **Proje Detayi Goruntuleme** (Yusuf Doruatli)
-8. **Yorum Yapma** (Yusuf Doruatli)
-9. **Proje Begenme** (Yusuf Doruatli)
-10. **Proje Raporlama** (Yusuf Doruatli)
+8. **Kullaniciya Ait Projeleri Goruntuleme** (Yusuf Doruatli)
+9. **Yorumlari Yonetme** (Yusuf Doruatli)
+10. **Begenileri Yonetme** (Yusuf Doruatli)
+11. **Raporlari Yonetme** (Yusuf Doruatli)
+12. **Admin Moderasyonu Yapma** (Yusuf Doruatli)
+
 
 # Gereksinim Dagilimlari
 

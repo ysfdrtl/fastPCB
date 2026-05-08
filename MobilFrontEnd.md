@@ -1,6 +1,5 @@
 # Mobil Frontend Gorev Dagilimi
 
-Bu dokumanda, mobil uygulamanin kullanici arayuzu gorevleri listelenmektedir. Projenin mevcut asamasinda mobil uygulama gelistirilmemistir; bu belge planlama amacli tutulmaktadir.
 
 ---
 
